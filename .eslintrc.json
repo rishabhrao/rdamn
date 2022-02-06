@@ -1,3 +1,58 @@
 {
-  "extends": "next/core-web-vitals"
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.json",
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"plugins": ["@typescript-eslint", "@next/eslint-plugin-next", "prettier"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/recommended-requiring-type-checking",
+		"plugin:@next/next/recommended",
+		"next",
+		"next/core-web-vitals",
+		"plugin:prettier/recommended",
+		"prettier"
+	],
+	"globals": {
+		"React": "writable"
+	},
+	"rules": {
+		"react/react-in-jsx-scope": "off",
+		"@typescript-eslint/no-explicit-any": "error",
+		"@typescript-eslint/no-var-requires": "off",
+		"no-use-before-define": "error",
+		"@typescript-eslint/no-use-before-define": "error",
+		"no-duplicate-imports": "off",
+		"@typescript-eslint/no-duplicate-imports": "error",
+		"no-self-compare": "error",
+		"no-unmodified-loop-condition": "error",
+		"no-unreachable-loop": "error",
+		"require-atomic-updates": "error",
+		"block-scoped-var": "error",
+		"capitalized-comments": "error",
+		"eqeqeq": "error",
+		"dot-notation": "error",
+		"no-lonely-if": "error",
+		"no-extra-label": "error",
+		"no-alert": "error",
+		"no-console": "error"
+	},
+	"overrides": [
+		{
+			"files": ["*.js", "**.js", "**/*.ts", "**/*.tsx"]
+		}
+	],
+	"env": {
+		"node": true,
+		"browser": true,
+		"amd": true
+	}
 }

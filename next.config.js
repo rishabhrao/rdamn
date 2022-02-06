@@ -1,6 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
+/* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
 
-module.exports = nextConfig
+/**
+ * @type {import('next').NextConfig}
+ **/
+module.exports = {
+	reactStrictMode: true,
+	swcMinify: true,
+	images: {
+		domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+	},
+}

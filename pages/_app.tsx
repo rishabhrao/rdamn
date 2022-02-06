@@ -1,8 +1,20 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+/* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
+
+import "tailwindcss/tailwind.css"
+import "@styles/globals.css"
+
+import { UserProvider } from "@auth0/nextjs-auth0"
+import type { AppProps } from "next/app"
+import NextNProgress from "nextjs-progressbar"
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+	return (
+		<UserProvider>
+			<NextNProgress color="#ff0000" />
+
+			<Component {...pageProps} />
+		</UserProvider>
+	)
 }
 
 export default MyApp
