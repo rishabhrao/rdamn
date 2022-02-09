@@ -19,6 +19,10 @@ const Terminal = dynamic(() => import("@components/Terminal"), {
 	ssr: false,
 })
 
+const PreviewBrowser = dynamic(() => import("@components/PreviewBrowser"), {
+	ssr: false,
+})
+
 export const getServerSideProps: GetServerSideProps<{ playground: PlaygroundType }> = async ({ req, res, params }) => {
 	const playgroundId = params?.playgroundId || ""
 
@@ -87,7 +91,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 							<p>File Explorer</p>
 						</ReflexElement>
 
-						<ReflexSplitter />
+						<ReflexSplitter className="!w-1 !bg-[#3b3b3b] !border-0" />
 
 						<ReflexElement flex={0.45}>
 							<ReflexContainer orientation="horizontal">
@@ -95,7 +99,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 									<p>Monaco Code Editor</p>
 								</ReflexElement>
 
-								<ReflexSplitter />
+								<ReflexSplitter className="!h-1 !bg-[#3b3b3b] !border-0" />
 
 								<ReflexElement flex={0.45} propagateDimensionsRate={500} propagateDimensions={true} className="h-full w-full overflow-hidden scrollbar-hide flex-grow bg-black">
 									<Terminal url="http://localhost:1234" dimensions={{ height: 0, width: 0 }} />
@@ -103,10 +107,10 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 							</ReflexContainer>
 						</ReflexElement>
 
-						<ReflexSplitter />
+						<ReflexSplitter className="!w-1 !bg-[#3b3b3b] !border-0" />
 
-						<ReflexElement flex={0.35}>
-							<p>Preview Browser</p>
+						<ReflexElement flex={0.35} className="h-full w-full flex-grow">
+							<PreviewBrowser defaultUrl="https://rishabhrao.codes" />
 						</ReflexElement>
 					</ReflexContainer>
 				</div>
