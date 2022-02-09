@@ -1,16 +1,23 @@
 /* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
 
+import "react-reflex/styles.css"
+
 import { getSession, useUser } from "@auth0/nextjs-auth0"
 import AuthCheck from "@components/AuthCheck"
 import { connectToDatabase } from "@lib/connectToDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
 import LogoIcon from "@public/logoWhite.png"
-import ProfileIconWhite from "@public/ProfileIconWhite.png"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import dynamic from "next/dynamic"
 import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { Toaster } from "react-hot-toast"
+import { ReflexContainer, ReflexElement, ReflexSplitter } from "react-reflex"
+
+const Terminal = dynamic(() => import("@components/Terminal"), {
+	ssr: false,
+})
 
 export const getServerSideProps: GetServerSideProps<{ playground: PlaygroundType }> = async ({ req, res, params }) => {
 	const playgroundId = params?.playgroundId || ""
@@ -57,7 +64,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 					<meta property="og:title" content={`${playground.playgroundName} - rdamn Playgrounds`} key="title" />
 				</Head>
 
-				<div className="m-2 shadow-lg bg-primary navbar text-neutral-content rounded-box">
+				{/* <div className="flex bg-black text-neutral-content p-0.5 pt-1">
 					<div className="flex-none">
 						<Link href="/">
 							<a role="button" className="btn btn-square btn-ghost" title="rdamn Homepage">
@@ -72,39 +79,37 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 							Created on {new Date(playground.createdAt).toLocaleTimeString([], { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric" })}
 						</p>
 					</div>
+				</div> */}
 
-					<div className="flex-none">
-						<div className="dropdown dropdown-end">
-							<div className="avatar">
-								<div tabIndex={0} className="btn btn-ghost btn-square rounded-btn">
-									<Image src={authUser?.picture?.length ? authUser.picture : ProfileIconWhite} alt="User Options" width={48} height={48} />
-								</div>
-							</div>
-							<ul tabIndex={0} className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-base-content">
-								<div className="p-2 my-2 text-center">
-									<p className="text-sm">Logged in as:</p>
-									<p className="text-blue-800">{authUser?.name}</p>
-									<p className="text-sm text-purple-blue-800">{authUser?.email}</p>
-								</div>
+				<div className="h-screen">
+					<ReflexContainer orientation="vertical">
+						<ReflexElement flex={0.2}>
+							<p>File Explorer</p>
+						</ReflexElement>
 
-								<Link href="/api/auth/logout">
-									<a role="button" className="w-full text-left btn btn-secondary">
-										<svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-											<path
-												fillRule="evenodd"
-												d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-												clipRule="evenodd"
-											/>
-										</svg>
-										<span>Logout</span>
-									</a>
-								</Link>
-							</ul>
-						</div>
-					</div>
+						<ReflexSplitter />
+
+						<ReflexElement flex={0.45}>
+							<ReflexContainer orientation="horizontal">
+								<ReflexElement flex={0.55}>
+									<p>Monaco Code Editor</p>
+								</ReflexElement>
+
+								<ReflexSplitter />
+
+								<ReflexElement flex={0.45} propagateDimensionsRate={500} propagateDimensions={true} className="h-full w-full overflow-hidden scrollbar-hide flex-grow bg-black">
+									<Terminal url="http://localhost:1234" dimensions={{ height: 0, width: 0 }} />
+								</ReflexElement>
+							</ReflexContainer>
+						</ReflexElement>
+
+						<ReflexSplitter />
+
+						<ReflexElement flex={0.35}>
+							<p>Preview Browser</p>
+						</ReflexElement>
+					</ReflexContainer>
 				</div>
-
-				<div className="flex flex-col m-5">WIP</div>
 
 				<Toaster />
 			</>

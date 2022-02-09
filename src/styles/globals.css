@@ -11,3 +11,13 @@ body {
 	font-family: "Segoe UI", "Segoe UI Emoji", "Segoe UI Symbol", Roboto, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
 		"Noto Color Emoji";
 }
+
+.xterm .xterm-viewport {
+	overflow: hidden;
+	cursor: default;
+	scrollbar-width: thin;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+	width: 1px;
+}
