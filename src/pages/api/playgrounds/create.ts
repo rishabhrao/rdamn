@@ -2,6 +2,7 @@
 
 import { getSession } from "@auth0/nextjs-auth0"
 import { connectToDatabase } from "@lib/connectToDatabase"
+import { disconnectFromDatabase } from "@lib/disconnectFromDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
 import Ajv, { JSONSchemaType } from "ajv"
 import { customAlphabet } from "nanoid"
@@ -22,7 +23,7 @@ const reqBodySchema: JSONSchemaType<reqBodyType> = {
 	additionalProperties: false,
 }
 
-const validate = ajv.compile<reqBodyType>(reqBodySchema)
+const validateReqBody = ajv.compile<reqBodyType>(reqBodySchema)
 
 type ResponseType = {
 	success: boolean
@@ -36,8 +37,8 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		return
 	}
 
-	const valid = validate(req.body)
-	if (!valid) {
+	const isReqBodyValid = validateReqBody(req.body)
+	if (!isReqBodyValid) {
 		res.status(400).send({ success: false, message: "Values invalid. Please Check again." })
 		return
 	}
@@ -82,6 +83,8 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 
 			res.status(400).send({ success: false, message: `Playground could not be created...` })
 		})
+
+	await disconnectFromDatabase()
 }
 
 export default handler

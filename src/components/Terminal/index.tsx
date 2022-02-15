@@ -2,8 +2,11 @@
 
 import "node_modules/xterm/css/xterm.css"
 
+import { EOL } from "os"
+
+import AjvJtd, { JTDSchemaType } from "ajv/dist/jtd"
 import { useEffect, useMemo, useRef } from "react"
-import { Socket, io } from "socket.io-client"
+import useWebSocket, { ReadyState } from "react-use-websocket"
 import { Terminal as XTerminal } from "xterm"
 import { FitAddon } from "xterm-addon-fit"
 import { WebLinksAddon } from "xterm-addon-web-links"
@@ -14,7 +17,7 @@ import { WebLinksAddon } from "xterm-addon-web-links"
  * @export
  */
 export type TerminalPropsType = {
-	url: string
+	socketUrl: string
 	dimensions: {
 		height: number
 		width: number
@@ -25,7 +28,7 @@ export type TerminalPropsType = {
  * A Terminal component to connect an xterm into a remote host through socket.io
  *
  * @export
- * @param {TerminalPropsType} props Properties provided to the Terminal component like the url of remote host
+ * @param {TerminalPropsType} props Properties provided to the Terminal component like the url of remote socket where tty is running
  * @return {JSX.Element}
  * @example
  * ```tsx
@@ -33,8 +36,14 @@ export type TerminalPropsType = {
  * ```
  */
 const Terminal = (props: TerminalPropsType): JSX.Element => {
-	const { url, dimensions } = props
+	const { socketUrl, dimensions } = props
 	const { width, height } = dimensions
+
+	// Refer https://gist.github.com/abritinthebay/d80eb99b2726c83feb0d97eab95206c4
+	const reset = "\x1b[0m"
+	const bright = "\x1b[1m"
+	const red = "\x1b[31m"
+	const BgWhite = "\x1b[47m"
 
 	const terminalRef = useRef(null)
 
@@ -58,33 +67,72 @@ const Terminal = (props: TerminalPropsType): JSX.Element => {
 		}
 	}, [xterm, terminalRef, fitAddon])
 
-	interface ServerToClientEvents {
-		ptyOut: (ptyOut: string) => void
+	const ajvJtd = useMemo(() => new AjvJtd(), [])
+
+	type TerminalClientToServerEventType = {
+		ptyIn: string
 	}
 
-	interface ClientToServerEvents {
-		ptyIn: (ptyIn: string) => void
+	const TerminalClientToServerEventSchema: JTDSchemaType<TerminalClientToServerEventType> = useMemo(
+		() => ({
+			properties: {
+				ptyIn: { type: "string" },
+			},
+			additionalProperties: false,
+		}),
+		[],
+	)
+
+	const serializeTerminalClientToServerEvent = useMemo(() => ajvJtd.compileSerializer(TerminalClientToServerEventSchema), [TerminalClientToServerEventSchema, ajvJtd])
+
+	type TerminalServerToClientEventType = {
+		ptyOut: string
 	}
 
-	const terminalSocket: Socket<ServerToClientEvents, ClientToServerEvents> = useMemo(() => io(url, { path: "/terminal" }), [url])
+	const TerminalServerToClientEventSchema: JTDSchemaType<TerminalServerToClientEventType> = useMemo(
+		() => ({
+			properties: {
+				ptyOut: { type: "string" },
+			},
+			additionalProperties: false,
+		}),
+		[],
+	)
+
+	const parseTerminalServerToClientEvent = useMemo(() => ajvJtd.compileParser(TerminalServerToClientEventSchema), [TerminalServerToClientEventSchema, ajvJtd])
+
+	const { sendMessage: sendSocketMessage, readyState: socketState } = useWebSocket(socketUrl, {
+		retryOnError: true,
+		shouldReconnect: () => true,
+		reconnectAttempts: 999999,
+		reconnectInterval: 3000,
+		onMessage: message => {
+			const parsedMessage = parseTerminalServerToClientEvent(message.data as string)
+			if (parsedMessage) {
+				xterm.write(parsedMessage.ptyOut)
+			}
+		},
+	})
 
 	useEffect(() => {
-		if (terminalSocket) {
-			xterm.onData(data => {
-				terminalSocket.emit("ptyIn", data)
-			})
-
-			terminalSocket.on("ptyOut", msg => {
-				xterm.write(msg)
-			})
-
-			terminalSocket.on("disconnect", () => {
-				terminalSocket.connect()
-			})
+		if (socketState === ReadyState.UNINSTANTIATED || socketState === ReadyState.CONNECTING) {
+			let buffer = ""
+			for (let lineNum = 0; lineNum <= xterm.buffer.active.length; lineNum++) {
+				buffer += xterm.buffer.active.getLine(lineNum)?.translateToString() || ""
+			}
+			if (!buffer.trim().endsWith("Connecting to Server... Please Wait...")) {
+				xterm.write(`${EOL}${EOL}${BgWhite}${bright}${red}Connecting to Server... Please Wait...${reset}${EOL}`)
+			}
 		}
-	}, [terminalSocket, terminalSocket.connected, xterm])
+	}, [socketState, xterm])
 
-	return <div ref={terminalRef} className="h-full w-full overflow-hidden scrollbar-hide"></div>
+	useEffect(() => {
+		xterm.onData(data => {
+			sendSocketMessage(serializeTerminalClientToServerEvent({ ptyIn: data }))
+		})
+	}, [sendSocketMessage, serializeTerminalClientToServerEvent, xterm])
+
+	return <div ref={terminalRef} className="w-full h-full overflow-hidden scrollbar-hide"></div>
 }
 
 export default Terminal

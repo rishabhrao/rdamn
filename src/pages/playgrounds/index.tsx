@@ -5,6 +5,7 @@ import Alert, { AlertTypes } from "@components/Alert"
 import AuthCheck from "@components/AuthCheck"
 import { nextPublicBaseUrl } from "@constants/nextPublicBaseUrl"
 import { connectToDatabase } from "@lib/connectToDatabase"
+import { disconnectFromDatabase } from "@lib/disconnectFromDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
 import LogoIcon from "@public/logoWhite.png"
 import ProfileIconWhite from "@public/ProfileIconWhite.png"
@@ -38,6 +39,8 @@ export const getServerSideProps: GetServerSideProps<{ playgrounds: PlaygroundTyp
 			},
 		})
 	).map(playground => playground.toJSON())
+
+	await disconnectFromDatabase()
 
 	return {
 		props: { playgrounds },
