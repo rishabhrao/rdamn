@@ -3,10 +3,12 @@
 import "react-reflex/styles.css"
 
 import { getSession, useUser } from "@auth0/nextjs-auth0"
+import Alert, { AlertTypes } from "@components/Alert"
 import AuthCheck from "@components/AuthCheck"
 import FileExplorer from "@components/FileExplorer"
 import MonacoEditor from "@components/MonacoEditor"
 import Spinner from "@components/Spinner"
+import { nextPublicBaseUrl } from "@constants/nextPublicBaseUrl"
 import { connectToDatabase } from "@lib/connectToDatabase"
 import { disconnectFromDatabase } from "@lib/disconnectFromDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
@@ -18,9 +20,10 @@ import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast"
 import { ReflexContainer, ReflexElement, ReflexSplitter } from "react-reflex"
 import ReconnectingWebSocket from "reconnecting-websocket"
+import useSWR from "swr"
 
 const Terminal = dynamic(() => import("@components/Terminal"), {
 	ssr: false,
@@ -103,6 +106,51 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 	})
 
 	const [PlaygroundUrl, setPlaygroundUrl] = useState<string>("")
+
+	const playgroundStarter = async (url: string) => {
+		return fetch(`${nextPublicBaseUrl}/${url}`, {
+			method: "POST",
+			body: JSON.stringify({
+				playgroundId: playground.playgroundId,
+			}),
+			headers: { "Content-Type": "application/json" },
+		})
+			.then(async r => {
+				type serverResponseType = {
+					success: boolean
+					message: string
+					PlaygroundUrl?: string
+				}
+
+				return (await r.json()) as serverResponseType
+			})
+			.then(res => {
+				if (res.success && res.PlaygroundUrl && res.PlaygroundUrl.length > 0) {
+					setPlaygroundUrl(res.PlaygroundUrl)
+				} else {
+					throw res.message
+				}
+			})
+			.catch((error: string) => {
+				throw error?.toString() || "Playground could not be started..."
+			})
+	}
+
+	useSWR("api/playground/start", playgroundStarter, {
+		revalidateIfStale: false,
+		revalidateOnFocus: false,
+		revalidateOnReconnect: false,
+		shouldRetryOnError: true,
+		errorRetryCount: 3,
+		onErrorRetry: (error, _key, _config, revalidate, { retryCount }) => {
+			if (retryCount >= 3) {
+				toast.custom(<Alert AlertType={AlertTypes.ERROR} message={(error as string)?.toString()} />, { position: "bottom-center", duration: 5000, id: "error" })
+
+				return
+			}
+			setTimeout(() => void revalidate({ retryCount: retryCount }), 5000)
+		},
+	})
 
 	useEffect(() => {
 		if (PlaygroundUrl.length > 0) {
