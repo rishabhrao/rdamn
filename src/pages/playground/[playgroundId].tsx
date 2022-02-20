@@ -10,7 +10,6 @@ import MonacoEditor from "@components/MonacoEditor"
 import Spinner from "@components/Spinner"
 import { nextPublicBaseUrl } from "@constants/nextPublicBaseUrl"
 import { connectToDatabase } from "@lib/connectToDatabase"
-import { disconnectFromDatabase } from "@lib/disconnectFromDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
 import LogoIcon from "@public/logoWhite.png"
 import type * as monaco from "monaco-editor/esm/vs/editor/editor.api"
@@ -57,8 +56,6 @@ export const getServerSideProps: GetServerSideProps<{ playground: PlaygroundType
 	await connectToDatabase()
 
 	const playground = (await PlaygroundModel.findOne({ userId, playgroundId }))?.toJSON()
-
-	await disconnectFromDatabase()
 
 	if (!playground) {
 		return {
@@ -119,6 +116,51 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 				type serverResponseType = {
 					success: boolean
 					message: string
+					ecsTaskArn?: string
+				}
+
+				return (await r.json()) as serverResponseType
+			})
+			.then(res => {
+				if (res.success && res.ecsTaskArn && res.ecsTaskArn.length > 0) {
+					return res.ecsTaskArn
+				} else {
+					throw res.message
+				}
+			})
+			.catch((error: string) => {
+				throw error?.toString() || "Playground could not be started..."
+			})
+	}
+
+	const { data: ecsTaskArn } = useSWR("api/playground/start", playgroundStarter, {
+		revalidateIfStale: false,
+		revalidateOnFocus: false,
+		revalidateOnReconnect: false,
+		shouldRetryOnError: true,
+		errorRetryCount: 1,
+		onErrorRetry: (error, _key, _config, revalidate, { retryCount }) => {
+			if (retryCount >= 1) {
+				toast.custom(<Alert AlertType={AlertTypes.ERROR} message={(error as string)?.toString()} />, { position: "bottom-center", duration: 5000, id: "error" })
+
+				return
+			}
+			setTimeout(() => void revalidate({ retryCount: retryCount }), 3000)
+		},
+	})
+
+	const playgroundPublicIpFetcher = async (url: string) => {
+		return fetch(`${nextPublicBaseUrl}/${url}`, {
+			method: "POST",
+			body: JSON.stringify({
+				ecsTaskArn: ecsTaskArn,
+			}),
+			headers: { "Content-Type": "application/json" },
+		})
+			.then(async r => {
+				type serverResponseType = {
+					success: boolean
+					message: string
 					PlaygroundUrl?: string
 				}
 
@@ -136,19 +178,19 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 			})
 	}
 
-	useSWR("api/playground/start", playgroundStarter, {
+	useSWR(ecsTaskArn ? "api/playground/getPublicIp" : null, ecsTaskArn ? playgroundPublicIpFetcher : null, {
 		revalidateIfStale: false,
 		revalidateOnFocus: false,
-		revalidateOnReconnect: false,
+		revalidateOnReconnect: true,
 		shouldRetryOnError: true,
-		errorRetryCount: 3,
+		errorRetryCount: 50,
 		onErrorRetry: (error, _key, _config, revalidate, { retryCount }) => {
-			if (retryCount >= 3) {
+			if (retryCount >= 50) {
 				toast.custom(<Alert AlertType={AlertTypes.ERROR} message={(error as string)?.toString()} />, { position: "bottom-center", duration: 5000, id: "error" })
 
 				return
 			}
-			setTimeout(() => void revalidate({ retryCount: retryCount }), 5000)
+			setTimeout(() => void revalidate({ retryCount: retryCount }), 500)
 		},
 	})
 
@@ -451,7 +493,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 								<ReflexSplitter className="!h-1 !bg-[#3b3b3b] !border-0" />
 
-								<ReflexElement flex={0.45} propagateDimensionsRate={500} propagateDimensions={true} className="flex-grow w-full h-full overflow-hidden bg-[#131313] scrollbar-hide">
+								<ReflexElement flex={0.45} propagateDimensionsRate={500} propagateDimensions={true} className="flex-grow w-full h-full overflow-hidden bg-black scrollbar-hide">
 									{PlaygroundUrl.length > 0 ? (
 										<Terminal socketUrl={`ws://${PlaygroundUrl}:${CommunicationPort}/terminal`} dimensions={{ height: 0, width: 0 }} />
 									) : (
@@ -465,7 +507,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 						<ReflexElement flex={0.35} className="flex-grow w-full h-full">
 							{PlaygroundUrl.length > 0 ? (
-								<PreviewBrowser defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}`} />
+								<PreviewBrowser defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}/`} />
 							) : (
 								<div className="w-full h-full flex justify-center items-center bg-[#131313] text-white">
 									<Spinner isDark />

@@ -7,6 +7,7 @@ export interface PlaygroundType {
 	userId: string
 	playgroundId: string
 	playgroundName: string
+	playgroundTemplate: string
 }
 
 const PlaygroundSchema: Schema = new Schema<PlaygroundType>({
@@ -14,6 +15,7 @@ const PlaygroundSchema: Schema = new Schema<PlaygroundType>({
 	userId: { type: String, required: true, index: true },
 	playgroundId: { type: String, required: true, index: true, unique: true, dropDups: true },
 	playgroundName: { type: String, required: true },
+	playgroundTemplate: { type: String, required: true },
 })
 
 PlaygroundSchema.set("toJSON", {

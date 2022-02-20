@@ -1,8 +1,8 @@
 /* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
 
 import { getSession } from "@auth0/nextjs-auth0"
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { connectToDatabase } from "@lib/connectToDatabase"
-import { disconnectFromDatabase } from "@lib/disconnectFromDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
 import Ajv, { JSONSchemaType } from "ajv"
 import { customAlphabet } from "nanoid"
@@ -12,14 +12,16 @@ const ajv = new Ajv()
 
 type reqBodyType = {
 	newPlaygroundName: string
+	newPlaygroundTemplate: string
 }
 
 const reqBodySchema: JSONSchemaType<reqBodyType> = {
 	type: "object",
 	properties: {
 		newPlaygroundName: { type: "string", minLength: 1 },
+		newPlaygroundTemplate: { type: "string", minLength: 1 },
 	},
-	required: ["newPlaygroundName"],
+	required: ["newPlaygroundName", "newPlaygroundTemplate"],
 	additionalProperties: false,
 }
 
@@ -43,7 +45,7 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		return
 	}
 
-	const { newPlaygroundName } = req.body as reqBodyType
+	const { newPlaygroundName, newPlaygroundTemplate } = req.body as reqBodyType
 
 	const authSession = getSession(req, res)
 
@@ -56,14 +58,54 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 
 	await connectToDatabase()
 
-	const newPlaygroundObject: PlaygroundType = {
-		createdAt: Date.now(),
-		userId,
-		playgroundId: customAlphabet("abcdefghijklmnopqrstuvwxyz", 36)(),
-		playgroundName: newPlaygroundName,
+	const createPlayground = async () => {
+		if (!process.env.RDAMN_AWS_ACCESS_KEY_ID || !process.env.RDAMN_AWS_SECRET_ACCESS_KEY || !process.env.RDAMN_AWS_DEFAULT_REGION || !process.env.RDAMN_AWS_BUCKET_NAME) {
+			throw "AWS Configuration Env Variables Not Set!"
+		}
+
+		const s3Client = new S3Client({
+			credentials: {
+				accessKeyId: process.env.RDAMN_AWS_ACCESS_KEY_ID,
+				secretAccessKey: process.env.RDAMN_AWS_SECRET_ACCESS_KEY,
+			},
+			region: process.env.RDAMN_AWS_DEFAULT_REGION,
+		})
+
+		const newPlaygroundId = customAlphabet("abcdefghijklmnopqrstuvwxyz", 36)()
+
+		const s3ObjectDetails = {
+			Bucket: process.env.RDAMN_AWS_BUCKET_NAME,
+			Key: newPlaygroundId,
+		}
+
+		const templateZipUrl = `https://github.com/rishabhrao/rdamn-template-${newPlaygroundTemplate}/archive/refs/heads/main.zip`
+
+		const templateZip = await fetch(templateZipUrl, {
+			method: "GET",
+		})
+
+		const templateZipBuffer = Buffer.from(await templateZip.arrayBuffer())
+
+		await s3Client.send(
+			new PutObjectCommand({
+				...s3ObjectDetails,
+				ContentType: "application/zip",
+				Body: templateZipBuffer,
+			}),
+		)
+
+		const newPlaygroundObject: PlaygroundType = {
+			createdAt: Date.now(),
+			userId,
+			playgroundId: newPlaygroundId,
+			playgroundName: newPlaygroundName,
+			playgroundTemplate: newPlaygroundTemplate,
+		}
+
+		return await PlaygroundModel.create(newPlaygroundObject)
 	}
 
-	await PlaygroundModel.create(newPlaygroundObject)
+	await createPlayground()
 		.then(newPlayground => {
 			if (newPlayground) {
 				res.status(201).send({
@@ -83,8 +125,6 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 
 			res.status(400).send({ success: false, message: `Playground could not be created...` })
 		})
-
-	await disconnectFromDatabase()
 }
 
 export default handler

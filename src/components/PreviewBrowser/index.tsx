@@ -1,6 +1,6 @@
 /* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 /**
  * Shape of properties provided to the PreviewBrowser component
@@ -24,17 +24,57 @@ export type PreviewBrowserPropsType = {
  */
 const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 	const { defaultUrl } = props
+	const loadingUrl = "//loading"
 
-	const [url] = useState(defaultUrl)
+	const [url, setUrl] = useState(loadingUrl)
 
 	const iframeElementRef = useRef<HTMLIFrameElement>(null)
 
-	return (
+	useEffect(() => {
+		const checkIsPreviewUpInterval = setInterval(() => {
+			void fetch("/api/playground/isPreviewUp", {
+				method: "POST",
+				body: JSON.stringify({
+					url: defaultUrl,
+				}),
+				headers: { "Content-Type": "application/json" },
+			})
+				.then(response => {
+					if (response && response.status === 200) {
+						if (url !== defaultUrl) {
+							setUrl(defaultUrl)
+						}
+						if (iframeElementRef.current && iframeElementRef.current.src !== defaultUrl) {
+							iframeElementRef.current.src = defaultUrl
+						}
+					} else {
+						throw ""
+					}
+				})
+				.catch(() => {
+					if (url !== loadingUrl) {
+						setUrl(loadingUrl)
+					}
+					if (iframeElementRef.current && iframeElementRef.current.src !== loadingUrl) {
+						iframeElementRef.current.src = loadingUrl
+					}
+				})
+		}, 5000)
+
+		return () => clearInterval(checkIsPreviewUpInterval)
+	}, [defaultUrl, url])
+
+	return url === loadingUrl ? (
+		<div className="w-full h-full flex flex-col justify-center items-center bg-gray-900 text-white text-center">
+			<div className="w-32 h-32 border-b-2 rounded-full animate-spin border-white mb-10"></div>
+			<h1 className="font-semibold text-lg">Waiting for live server on {defaultUrl}</h1>
+		</div>
+	) : (
 		<div className="flex flex-col w-full h-full">
 			<div className="relative z-10 flex py-1 bg-gray-900 shadow-sm overflow-x-clip">
 				<div className="flex items-center justify-between">
 					{/* 
-					// TODO
+					// TODO figure out a way to go back and forward in history of PreviewBrowser
 					*/}
 					{/* <button className="btn btn-ghost btn-sm btn-square" onClick={() => {}}>
 						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 fill-white" viewBox="0 0 20 20">
@@ -68,7 +108,7 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 						className="btn btn-ghost btn-sm btn-square"
 						onClick={() => {
 							if (iframeElementRef.current) {
-								iframeElementRef.current.src = defaultUrl
+								iframeElementRef.current.src = url
 							}
 						}}
 					>

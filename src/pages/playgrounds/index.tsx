@@ -5,7 +5,6 @@ import Alert, { AlertTypes } from "@components/Alert"
 import AuthCheck from "@components/AuthCheck"
 import { nextPublicBaseUrl } from "@constants/nextPublicBaseUrl"
 import { connectToDatabase } from "@lib/connectToDatabase"
-import { disconnectFromDatabase } from "@lib/disconnectFromDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
 import LogoIcon from "@public/logoWhite.png"
 import ProfileIconWhite from "@public/ProfileIconWhite.png"
@@ -13,6 +12,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 
@@ -40,8 +40,6 @@ export const getServerSideProps: GetServerSideProps<{ playgrounds: PlaygroundTyp
 		})
 	).map(playground => playground.toJSON())
 
-	await disconnectFromDatabase()
-
 	return {
 		props: { playgrounds },
 	}
@@ -50,11 +48,14 @@ export const getServerSideProps: GetServerSideProps<{ playgrounds: PlaygroundTyp
 const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	const { user: authUser, isLoading: isAuthLoading } = useUser()
 
+	const router = useRouter()
+
 	const [playgrounds, setPlaygrounds] = useState(ssrPlaygrounds)
 
 	const [isCreatePlaygroundModalOpen, setisCreatePlaygroundModalOpen] = useState(false)
 	const [isCreatePlaygroundLoading, setIsCreatePlaygroundLoading] = useState(false)
 	const [newPlaygroundName, setNewPlaygroundName] = useState("")
+	const [newPlaygroundTemplate, setNewPlaygroundTemplate] = useState("")
 
 	const createNewPlayground = async () => {
 		setIsCreatePlaygroundLoading(true)
@@ -63,6 +64,7 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 			method: "POST",
 			body: JSON.stringify({
 				newPlaygroundName,
+				newPlaygroundTemplate,
 			}),
 			headers: { "Content-Type": "application/json" },
 		})
@@ -79,6 +81,8 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 					setPlaygrounds([responseBody.newPlayground, ...playgrounds])
 
 					toast.custom(<Alert AlertType={AlertTypes.SUCCESS} message={responseBody.message} />, { position: "bottom-center", duration: 5000, id: "success" })
+
+					await router.push(`/playground/${responseBody.newPlayground.playgroundId}`)
 				} else {
 					throw responseBody.message
 				}
@@ -99,46 +103,48 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 					<meta property="og:title" content="Playgrounds - rdamn" key="title" />
 				</Head>
 
-				<div className="m-2 shadow-lg bg-primary navbar text-neutral-content rounded-box">
-					<div className="flex-none">
-						<Link href="/">
-							<a role="button" className="btn btn-square btn-ghost" title="rdamn Homepage">
-								<Image src={LogoIcon} alt="rdamn" width={48} height={48} />
-							</a>
-						</Link>
-					</div>
+				<div className="w-full flex">
+					<div className="m-2 shadow-lg bg-primary navbar text-neutral-content rounded-box">
+						<div className="flex-none">
+							<Link href="/">
+								<a role="button" className="btn btn-square btn-ghost" title="rdamn Homepage">
+									<Image src={LogoIcon} alt="rdamn" width={48} height={48} />
+								</a>
+							</Link>
+						</div>
 
-					<div className="flex-1 mx-2">
-						<span className="text-xl font-bold">rdamn Playgrounds</span>
-					</div>
+						<div className="flex-1 mx-2">
+							<span className="text-xl font-bold">rdamn Playgrounds</span>
+						</div>
 
-					<div className="flex-none">
-						<div className="dropdown dropdown-end">
-							<div className="avatar">
-								<div tabIndex={0} className="btn btn-ghost btn-square rounded-btn">
-									<Image src={authUser?.picture?.length ? authUser.picture : ProfileIconWhite} alt="User Options" width={48} height={48} />
+						<div className="flex-none">
+							<div className="dropdown dropdown-end">
+								<div className="avatar">
+									<div tabIndex={0} className="btn btn-ghost btn-square rounded-btn">
+										<Image src={authUser?.picture?.length ? authUser.picture : ProfileIconWhite} alt="User Options" width={48} height={48} />
+									</div>
 								</div>
+								<ul tabIndex={0} className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-base-content">
+									<div className="p-2 my-2 text-center">
+										<p className="text-sm">Logged in as:</p>
+										<p className="text-blue-800">{authUser?.name}</p>
+										<p className="text-sm text-purple-blue-800">{authUser?.email}</p>
+									</div>
+
+									<Link href="/api/auth/logout">
+										<a role="button" className="w-full text-left btn btn-secondary">
+											<svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
+												<path
+													fillRule="evenodd"
+													d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+													clipRule="evenodd"
+												/>
+											</svg>
+											<span>Logout</span>
+										</a>
+									</Link>
+								</ul>
 							</div>
-							<ul tabIndex={0} className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-base-content">
-								<div className="p-2 my-2 text-center">
-									<p className="text-sm">Logged in as:</p>
-									<p className="text-blue-800">{authUser?.name}</p>
-									<p className="text-sm text-purple-blue-800">{authUser?.email}</p>
-								</div>
-
-								<Link href="/api/auth/logout">
-									<a role="button" className="w-full text-left btn btn-secondary">
-										<svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-											<path
-												fillRule="evenodd"
-												d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-												clipRule="evenodd"
-											/>
-										</svg>
-										<span>Logout</span>
-									</a>
-								</Link>
-							</ul>
 						</div>
 					</div>
 				</div>
@@ -224,13 +230,31 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 									/>
 								</div>
 
+								<div className="mt-2 form-control">
+									<label className="label">
+										<span className="label-text">Template</span>
+									</label>
+									<select
+										placeholder="Playground Template"
+										className="select select-primary select-bordered"
+										value={newPlaygroundTemplate}
+										onChange={event => setNewPlaygroundTemplate(event?.target.value)}
+									>
+										<option value="" disabled>
+											Select Playground Template
+										</option>
+										<option value="html">HTML</option>
+										<option value="nextjs">Next.js</option>
+									</select>
+								</div>
+
 								<div className="mt-6">
 									<button
 										type="button"
 										className={`group disabled:cursor-not-allowed disabled:opacity-50 relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
 											isCreatePlaygroundLoading ? "loading" : ""
 										}`}
-										disabled={isCreatePlaygroundLoading || newPlaygroundName.length === 0}
+										disabled={isCreatePlaygroundLoading || newPlaygroundName.length === 0 || newPlaygroundTemplate.length === 0}
 										onClick={createNewPlayground}
 									>
 										<span className="absolute inset-y-0 left-0 flex items-center pl-3">

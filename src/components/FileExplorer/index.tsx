@@ -349,7 +349,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 							content: DirectoryTreeType
 						}
 
-						if (currentDirectory) {
+						if (currentDirectory && currentDirectory.content) {
 							Object.values(currentDirectory.content).forEach(folderContent => {
 								if (!parsedMessage.folderContents.find(({ path }) => path === folderContent.path)) {
 									const newOpenFiles = openFiles.filter(({ filePath }) => filePath !== folderContent.path)
@@ -419,7 +419,13 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 
 	const { toggleMenu: toggleContextMenu, ...contextMenuProps } = useMenuState()
 	const [contextMenuAnchorPoint, setContextMenuAnchorPoint] = useState({ x: 0, y: 0 })
-	const [selectedContextMenuFilePath, setSelectedContextMenuFilePath] = useState<string | null>(null)
+	const [selectedContextMenuFile, setSelectedContextMenuFile] = useState<{
+		type: "directory" | "file"
+		path: string
+		name: string
+	} | null>(null)
+
+	const [isDeleteFileModalOpen, setIsDeleteFileModalOpen] = useState(false)
 
 	const DirectoryTreeRenderer = ({
 		depth,
@@ -457,7 +463,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 												content: DirectoryTreeType
 											}
 
-											if (currentDirectory) {
+											if (currentDirectory && currentDirectory.content) {
 												currentDirectory.isOpen = !currentDirectory.isOpen
 
 												objectPath.set(newDirectoryTree, parentFoldersTillRoot, currentDirectory)
@@ -467,7 +473,11 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 										}}
 										onContextMenu={e => {
 											e.preventDefault()
-											setSelectedContextMenuFilePath(item.path)
+											setSelectedContextMenuFile({
+												type: item.type,
+												path: item.path,
+												name: item.name,
+											})
 											setContextMenuAnchorPoint({ x: e.clientX, y: e.clientY })
 											toggleContextMenu(true)
 										}}
@@ -492,7 +502,11 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 									style={{ paddingLeft: depth * 10 }}
 									onContextMenu={e => {
 										e.preventDefault()
-										setSelectedContextMenuFilePath(item.path)
+										setSelectedContextMenuFile({
+											type: item.type,
+											path: item.path,
+											name: item.name,
+										})
 										setContextMenuAnchorPoint({ x: e.clientX, y: e.clientY })
 										toggleContextMenu(true)
 									}}
@@ -559,7 +573,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 			<div className="bg-[#252525] text-xs px-2 pb-2 pt-3 shadow z-50 sticky flex items-center top-0 left-0">
 				<div className="flex-grow font-bold uppercase">Explorer</div>
 				{/* 
-				// TODO
+				// TODO Add Create new file and folder functionality
 				*/}
 				{/* <div className="flex items-center justify-center mx-1 cursor-pointer">
 					<button className="text-base">
@@ -586,15 +600,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 			<div className="text-sm">{!!directoryTree.home.content.rdamn.content.code.content && <DirectoryTreeRenderer depth={1} directory={directoryTree.home.content.rdamn.content.code} />}</div>
 
 			<ControlledMenu {...contextMenuProps} anchorPoint={contextMenuAnchorPoint} onClose={() => toggleContextMenu(false)} theming="dark">
-				<MenuItem
-					onClick={() => {
-						// TODO
-						// eslint-disable-next-line no-alert
-						if (selectedContextMenuFilePath && confirm("Sure?")) {
-							sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "delete", path: selectedContextMenuFilePath }))
-						}
-					}}
-				>
+				<MenuItem onClick={() => setIsDeleteFileModalOpen(true)}>
 					<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
 						<path
 							fillRule="evenodd"
@@ -605,6 +611,64 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 					Delete
 				</MenuItem>
 			</ControlledMenu>
+
+			{isDeleteFileModalOpen && selectedContextMenuFile && (
+				<div className="bg-gray-900 h-[560px] relative z-[9999]">
+					<div className="fixed inset-0 z-10 overflow-y-auto">
+						<div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+							<div className="fixed inset-0 z-40 transition-opacity" aria-hidden="true">
+								<div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+							</div>
+							<span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
+							<div
+								className="relative z-50 inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+								role="dialog"
+								aria-modal="true"
+								aria-labelledby="modal-headline"
+							>
+								<div>
+									<div className="flex items-center justify-center w-14 h-14 mx-auto rounded-full">
+										<svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path strokeWidth="2" d="M12,17 L12,19 M12,10 L12,16 M12,3 L2,22 L22,22 L12,3 Z" />
+										</svg>
+									</div>
+									<div className="mt-3 text-center sm:mt-5">
+										<h3 className="text-lg font-medium leading-6 text-gray-100">Do you really want to delete this {selectedContextMenuFile.type}?</h3>
+										<div className="mt-2">
+											<p className="text-sm text-gray-100">
+												The following {selectedContextMenuFile.type} would be deleted:
+												<br />
+												<b>{selectedContextMenuFile.name}</b>
+												<br />({selectedContextMenuFile.path})
+											</p>
+										</div>
+									</div>
+								</div>
+								<div className="grid grid-cols-2 gap-4 mt-5 sm:mt-6">
+									<button
+										type="button"
+										onClick={() => setIsDeleteFileModalOpen(false)}
+										className="inline-flex justify-center w-full rounded-md border border-[transparent] shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 sm:text-sm"
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										onClick={() => {
+											sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "delete", path: selectedContextMenuFile.path }))
+											setIsDeleteFileModalOpen(false)
+											setSelectedContextMenuFile(null)
+										}}
+										className="inline-flex justify-center w-full rounded-md border border-[transparent] shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:text-sm"
+									>
+										Delete
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
