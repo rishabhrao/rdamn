@@ -77,13 +77,13 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		)
 
 		if (!ecsTaskDescription?.tasks || ecsTaskDescription.tasks.length === 0 || !ecsTaskDescription.tasks[0].attachments || ecsTaskDescription.tasks[0].attachments.length === 0) {
-			throw ecsTaskDescription
+			throw "notUpYet"
 		}
 
 		const networkInterfaceId = ecsTaskDescription.tasks[0].attachments[0].details?.find(({ name }) => name === "networkInterfaceId")?.value
 
 		if (!networkInterfaceId) {
-			throw ecsTaskDescription
+			throw "notUpYet"
 		}
 
 		const ec2Client = new EC2Client({
@@ -105,7 +105,7 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 			ec2NetworkInterfaceDescription.NetworkInterfaces.length === 0 ||
 			!ec2NetworkInterfaceDescription.NetworkInterfaces[0].Association?.PublicIp
 		) {
-			throw ec2NetworkInterfaceDescription
+			throw "notUpYet"
 		}
 
 		const publicIp = ec2NetworkInterfaceDescription.NetworkInterfaces[0].Association?.PublicIp
@@ -130,8 +130,10 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 			}
 		})
 		.catch((error: unknown) => {
-			// eslint-disable-next-line no-console
-			console.error("Error:", error)
+			if (error !== "notUpYet") {
+				// eslint-disable-next-line no-console
+				console.error("Error:", error)
+			}
 
 			res.status(400).send({ success: false, message: `Playground has not started yet...` })
 		})
