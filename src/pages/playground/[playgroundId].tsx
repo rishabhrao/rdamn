@@ -149,7 +149,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 		},
 	})
 
-	const playgroundPublicIpFetcher = async (url: string) => {
+	const playgroundUrlFetcher = async (url: string) => {
 		return fetch(`${nextPublicBaseUrl}/${url}`, {
 			method: "POST",
 			body: JSON.stringify({
@@ -178,7 +178,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 			})
 	}
 
-	useSWR(ecsTaskArn ? "api/playground/getPublicIp" : null, ecsTaskArn ? playgroundPublicIpFetcher : null, {
+	useSWR(ecsTaskArn ? "api/playground/getPlaygroundUrl" : null, ecsTaskArn ? playgroundUrlFetcher : null, {
 		revalidateIfStale: false,
 		revalidateOnFocus: false,
 		revalidateOnReconnect: true,

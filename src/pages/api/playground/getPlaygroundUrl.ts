@@ -3,8 +3,10 @@
 import { getSession } from "@auth0/nextjs-auth0"
 import { DescribeNetworkInterfacesCommand, EC2Client } from "@aws-sdk/client-ec2"
 import { DescribeTasksCommand, ECSClient } from "@aws-sdk/client-ecs"
+import { redis } from "@lib/redis"
 import Ajv, { JSONSchemaType } from "ajv"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { generateSlug } from "random-word-slugs"
 
 const ajv = new Ajv()
 
@@ -50,9 +52,13 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		return
 	}
 
-	const getPlaygroundPublicIp = async () => {
+	const getPlaygroundUrl = async () => {
 		if (!process.env.RDAMN_AWS_ACCESS_KEY_ID || !process.env.RDAMN_AWS_SECRET_ACCESS_KEY || !process.env.RDAMN_AWS_DEFAULT_REGION || !process.env.RDAMN_AWS_CLUSTER) {
 			throw "AWS Configuration Env Variables Not Set!"
+		}
+
+		if (!process.env.DNS_SERVER) {
+			throw "DNS Server URL Not Set!"
 		}
 
 		const ecsClient = new ECSClient({
@@ -102,10 +108,20 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 			throw ec2NetworkInterfaceDescription
 		}
 
-		return ec2NetworkInterfaceDescription.NetworkInterfaces[0].Association?.PublicIp
+		const publicIp = ec2NetworkInterfaceDescription.NetworkInterfaces[0].Association?.PublicIp
+
+		let slug = generateSlug(2, { format: "lower" }).split(" ").join("-")
+
+		while (await redis.get("slug")) {
+			slug = generateSlug(2, { format: "lower" }).split(" ").join("-")
+		}
+
+		await redis.set(slug, publicIp, "EX", 6 * 60 * 60) // 6 Hours
+
+		return `${slug}.${process.env.DNS_SERVER}`
 	}
 
-	await getPlaygroundPublicIp()
+	await getPlaygroundUrl()
 		.then(PlaygroundUrl => {
 			if (PlaygroundUrl) {
 				res.status(201).send({ success: true, message: "Playground Started Successfully!", PlaygroundUrl: PlaygroundUrl })
