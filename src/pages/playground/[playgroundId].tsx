@@ -196,7 +196,9 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 	useEffect(() => {
 		if (PlaygroundUrl.length > 0) {
-			const ttlSocket = new ReconnectingWebSocket(`ws://${PlaygroundUrl}:${CommunicationPort}/ttl`)
+			const ttlSocket = new ReconnectingWebSocket(
+				`${process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production" ? "wss" : "ws"}://${PlaygroundUrl}:${CommunicationPort}/ttl`,
+			)
 			setInterval(() => {
 				if (ttlSocket.readyState === 1) {
 					ttlSocket.send("ping")
@@ -336,8 +338,12 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 										{sideMenuSelectedTab === "explorer" &&
 											(PlaygroundUrl.length > 0 ? (
 												<FileExplorer
-													crudSocketUrl={`ws://${PlaygroundUrl}:${CommunicationPort}/crud`}
-													filewatchSocketUrl={`ws://${PlaygroundUrl}:${CommunicationPort}/filewatch`}
+													crudSocketUrl={`${
+														process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production" ? "wss" : "ws"
+													}://${PlaygroundUrl}:${CommunicationPort}/crud`}
+													filewatchSocketUrl={`${
+														process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production" ? "wss" : "ws"
+													}://${PlaygroundUrl}:${CommunicationPort}/filewatch`}
 													openFiles={openFiles}
 													setOpenFiles={setOpenFiles}
 													activeTab={activeTab}
@@ -495,7 +501,12 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 								<ReflexElement flex={0.45} propagateDimensionsRate={500} propagateDimensions={true} className="flex-grow w-full h-full overflow-hidden bg-black scrollbar-hide">
 									{PlaygroundUrl.length > 0 ? (
-										<Terminal socketUrl={`ws://${PlaygroundUrl}:${CommunicationPort}/terminal`} dimensions={{ height: 0, width: 0 }} />
+										<Terminal
+											socketUrl={`${
+												process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production" ? "wss" : "ws"
+											}://${PlaygroundUrl}:${CommunicationPort}/terminal`}
+											dimensions={{ height: 0, width: 0 }}
+										/>
 									) : (
 										<Spinner isDark />
 									)}
