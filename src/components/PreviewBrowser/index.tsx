@@ -19,7 +19,7 @@ export type PreviewBrowserPropsType = {
  * @return {JSX.Element}
  * @example
  * ```tsx
- * <PreviewBrowser defaultUrl="https://rdamn.vercel.app" />
+ * <PreviewBrowser defaultUrl="https://rdamn.cloud" />
  * ```
  */
 const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {

@@ -2,7 +2,7 @@
 
 let baseUrl = "http://localhost:3000"
 if (process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production") {
-	baseUrl = "https://rdamn.vercel.app"
+	baseUrl = "https://rdamn.cloud"
 }
 
 /**
