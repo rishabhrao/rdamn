@@ -417,7 +417,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 		}
 	}, [editorChangesCallback, sendCrudSocketMessage, serializeCrudClientToServerEvent, setEditorChangesCallback])
 
-	const { toggleMenu: toggleContextMenu, ...contextMenuProps } = useMenuState()
+	const [contextMenuProps, toggleContextMenu] = useMenuState()
 	const [contextMenuAnchorPoint, setContextMenuAnchorPoint] = useState({ x: 0, y: 0 })
 	const [selectedContextMenuFile, setSelectedContextMenuFile] = useState<{
 		type: "directory" | "file"

@@ -275,7 +275,7 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 											isCreatePlaygroundLoading ? "loading" : ""
 										}`}
 										disabled={isCreatePlaygroundLoading || newPlaygroundName.length === 0 || newPlaygroundTemplate.length === 0}
-										onClick={createNewPlayground}
+										onClick={() => void createNewPlayground()}
 									>
 										<span className="absolute inset-y-0 left-0 flex items-center pl-3">
 											<svg
