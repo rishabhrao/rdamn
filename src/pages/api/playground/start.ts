@@ -142,7 +142,13 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		return ecsRunTask.tasks[0].taskArn
 	}
 
-	await startPlayground()
+	await (() => {
+		if (process.env.VERCEL_ENV !== "production" && process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
+			return Promise.resolve("test")
+		}
+
+		return startPlayground()
+	})()
 		.then(ecsTaskArn => {
 			if (ecsTaskArn) {
 				res.status(201).send({ success: true, message: "Playground Started Successfully!", ecsTaskArn: ecsTaskArn })

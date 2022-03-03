@@ -127,7 +127,17 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		}
 	}
 
-	await getPlaygroundUrl()
+	await (() => {
+		if (process.env.VERCEL_ENV !== "production" && process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
+			return Promise.resolve({
+				PlaygroundUrl: "localhost",
+				PlaygroundSlug: "test",
+				PlaygroundDnsServer: "localhost",
+			})
+		}
+
+		return getPlaygroundUrl()
+	})()
 		.then(({ PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer }) => {
 			if (PlaygroundUrl && PlaygroundSlug && PlaygroundDnsServer) {
 				res.status(201).send({ success: true, message: "Playground Started Successfully!", PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer })
