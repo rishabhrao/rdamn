@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react"
  */
 export type PreviewBrowserPropsType = {
 	defaultUrl: string
+	proxyUrl: string
 }
 
 /**
@@ -23,7 +24,7 @@ export type PreviewBrowserPropsType = {
  * ```
  */
 const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
-	const { defaultUrl } = props
+	const { defaultUrl, proxyUrl } = props
 	const loadingUrl = "//loading"
 
 	const [url, setUrl] = useState(loadingUrl)
@@ -41,11 +42,11 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 			})
 				.then(response => {
 					if (response && response.status === 200) {
-						if (url !== defaultUrl) {
-							setUrl(defaultUrl)
+						if (url !== proxyUrl) {
+							setUrl(proxyUrl)
 						}
-						if (iframeElementRef.current && iframeElementRef.current.src !== defaultUrl) {
-							iframeElementRef.current.src = defaultUrl
+						if (iframeElementRef.current && iframeElementRef.current.src !== proxyUrl) {
+							iframeElementRef.current.src = proxyUrl
 						}
 					} else {
 						throw ""
@@ -62,12 +63,12 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 		}, 5000)
 
 		return () => clearInterval(checkIsPreviewUpInterval)
-	}, [defaultUrl, url])
+	}, [defaultUrl, proxyUrl, url])
 
 	return url === loadingUrl ? (
-		<div className="w-full h-full flex flex-col justify-center items-center bg-gray-900 text-white text-center">
-			<div className="w-32 h-32 border-b-2 rounded-full animate-spin border-white mb-10"></div>
-			<h1 className="font-semibold text-lg">Waiting for live server on {defaultUrl}</h1>
+		<div className="flex flex-col items-center justify-center w-full h-full text-center text-white bg-gray-900">
+			<div className="w-32 h-32 mb-10 border-b-2 border-white rounded-full animate-spin"></div>
+			<h1 className="text-lg font-semibold">Waiting for live server on {defaultUrl}</h1>
 		</div>
 	) : (
 		<div className="flex flex-col w-full h-full">

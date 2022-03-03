@@ -29,6 +29,8 @@ type ResponseType = {
 	success: boolean
 	message: string
 	PlaygroundUrl?: string
+	PlaygroundSlug?: string
+	PlaygroundDnsServer?: string
 }
 
 const handler = async function (req: NextApiRequest, res: NextApiResponse<ResponseType>) {
@@ -108,23 +110,27 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 			throw "notUpYet"
 		}
 
-		const publicIp = ec2NetworkInterfaceDescription.NetworkInterfaces[0].Association?.PublicIp
+		const ec2NetworkInterfacePublicIp = ec2NetworkInterfaceDescription.NetworkInterfaces[0].Association?.PublicIp
 
-		let slug = generateSlug(2, { format: "lower" }).split(" ").join("-")
+		let PlaygroundSlug = generateSlug(2, { format: "lower" }).split(" ").join("-")
 
 		while (await redis.get("slug")) {
-			slug = generateSlug(2, { format: "lower" }).split(" ").join("-")
+			PlaygroundSlug = generateSlug(2, { format: "lower" }).split(" ").join("-")
 		}
 
-		await redis.set(slug, publicIp, "EX", 6 * 60 * 60) // 6 Hours
+		await redis.set(PlaygroundSlug, ec2NetworkInterfacePublicIp, "EX", 6 * 60 * 60) // 6 Hours
 
-		return `${slug}.${process.env.DNS_SERVER}`
+		return {
+			PlaygroundUrl: `${PlaygroundSlug}.${process.env.DNS_SERVER}`,
+			PlaygroundSlug: PlaygroundSlug,
+			PlaygroundDnsServer: process.env.DNS_SERVER,
+		}
 	}
 
 	await getPlaygroundUrl()
-		.then(PlaygroundUrl => {
-			if (PlaygroundUrl) {
-				res.status(201).send({ success: true, message: "Playground Started Successfully!", PlaygroundUrl: PlaygroundUrl })
+		.then(({ PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer }) => {
+			if (PlaygroundUrl && PlaygroundSlug && PlaygroundDnsServer) {
+				res.status(201).send({ success: true, message: "Playground Started Successfully!", PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer })
 			} else {
 				throw ""
 			}

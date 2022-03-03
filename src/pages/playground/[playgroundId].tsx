@@ -103,6 +103,8 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 	})
 
 	const [PlaygroundUrl, setPlaygroundUrl] = useState<string>("")
+	const [PlaygroundSlug, setPlaygroundSlug] = useState<string>("")
+	const [PlaygroundDnsServer, setPlaygroundDnsServer] = useState<string>("")
 
 	const playgroundStarter = async (url: string) => {
 		return fetch(`${nextPublicBaseUrl}/${url}`, {
@@ -162,13 +164,25 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 					success: boolean
 					message: string
 					PlaygroundUrl?: string
+					PlaygroundSlug?: string
+					PlaygroundDnsServer?: string
 				}
 
 				return (await r.json()) as serverResponseType
 			})
 			.then(res => {
-				if (res.success && res.PlaygroundUrl && res.PlaygroundUrl.length > 0) {
+				if (
+					res.success &&
+					res.PlaygroundUrl &&
+					res.PlaygroundUrl.length > 0 &&
+					res.PlaygroundSlug &&
+					res.PlaygroundSlug.length > 0 &&
+					res.PlaygroundDnsServer &&
+					res.PlaygroundDnsServer.length > 0
+				) {
 					setPlaygroundUrl(res.PlaygroundUrl)
+					setPlaygroundSlug(res.PlaygroundSlug)
+					setPlaygroundDnsServer(res.PlaygroundDnsServer)
 				} else {
 					throw res.message
 				}
@@ -299,27 +313,38 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 													</div>
 												</div>
 
-												<div className="p-4">
-													<p>You can use the following URL + port mapping in your rdamn playground:</p>
-													<p className="mt-4 break-all">
-														<code>
-															localhost:<span className="underline">{PreviewPort}</span>
-														</code>{" "}
-														maps to <br />
-														<code>
-															{PlaygroundUrl.length > 0 ? PlaygroundUrl : "loadingUrl"}:<span className="underline">{PreviewPort}</span>
-														</code>
-													</p>
-													<p className="mt-4 break-all">
-														<code>
-															localhost:<span className="underline">{PreviewPort2}</span>
-														</code>{" "}
-														maps to <br />
-														<code>
-															{PlaygroundUrl.length > 0 ? PlaygroundUrl : "loadingUrl"}:<span className="underline">{PreviewPort2}</span>
-														</code>
-													</p>
-												</div>
+												{PlaygroundUrl.length > 0 && PlaygroundSlug.length > 0 && PlaygroundDnsServer.length > 0 && (
+													<div className="p-4">
+														<p>You can use the following URL + port mapping in your rdamn playground:</p>
+														<p className="mt-4 break-all">
+															<code>
+																localhost:<span className="underline">{PreviewPort}</span>
+															</code>{" "}
+															maps to <br />
+															<code>
+																<span className="underline">https</span>://{PlaygroundSlug}.proxy.{PlaygroundDnsServer}
+															</code>
+														</p>
+														<p className="mt-4 break-all">
+															<code>
+																localhost:<span className="underline">{PreviewPort}</span>
+															</code>{" "}
+															maps to <br />
+															<code>
+																http://{PlaygroundUrl}:<span className="underline">{PreviewPort}</span>
+															</code>
+														</p>
+														<p className="mt-4 break-all">
+															<code>
+																localhost:<span className="underline">{PreviewPort2}</span>
+															</code>{" "}
+															maps to <br />
+															<code>
+																http://{PlaygroundUrl}:<span className="underline">{PreviewPort2}</span>
+															</code>
+														</p>
+													</div>
+												)}
 
 												<div className="bg-[#252525] text-xs p-2 shadow z-50 sticky flex flex-col top-0 left-0">
 													<div className="flex-grow font-bold uppercase">Quick Links</div>
@@ -518,7 +543,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 						<ReflexElement flex={0.35} className="flex-grow w-full h-full">
 							{PlaygroundUrl.length > 0 ? (
-								<PreviewBrowser defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}/`} />
+								<PreviewBrowser defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}`} proxyUrl={`https://${PlaygroundSlug}.proxy.${PlaygroundDnsServer}/`} />
 							) : (
 								<div className="w-full h-full flex justify-center items-center bg-[#131313] text-white">
 									<Spinner isDark />
