@@ -69,11 +69,12 @@ const Terminal = (props: TerminalPropsType): JSX.Element => {
 
 	const ajvJtd = useMemo(() => new AjvJtd(), [])
 
-	type TerminalClientToServerEventType = {
+	type PtyInTerminalClientToServerEventType = {
+		type: "ptyIn"
 		ptyIn: string
 	}
 
-	const TerminalClientToServerEventSchema: JTDSchemaType<TerminalClientToServerEventType> = useMemo(
+	const PtyInTerminalClientToServerEventSchema: JTDSchemaType<Omit<PtyInTerminalClientToServerEventType, "type">> = useMemo(
 		() => ({
 			properties: {
 				ptyIn: { type: "string" },
@@ -81,6 +82,34 @@ const Terminal = (props: TerminalPropsType): JSX.Element => {
 			additionalProperties: false,
 		}),
 		[],
+	)
+
+	type StartPreviewTerminalClientToServerEventType = {
+		type: "startPreview"
+		shouldStartPreview: boolean
+	}
+
+	const StartPreviewTerminalClientToServerEventSchema: JTDSchemaType<Omit<StartPreviewTerminalClientToServerEventType, "type">> = useMemo(
+		() => ({
+			properties: {
+				shouldStartPreview: { type: "boolean" },
+			},
+			additionalProperties: false,
+		}),
+		[],
+	)
+
+	type TerminalClientToServerEventType = PtyInTerminalClientToServerEventType | StartPreviewTerminalClientToServerEventType
+
+	const TerminalClientToServerEventSchema: JTDSchemaType<TerminalClientToServerEventType> = useMemo(
+		() => ({
+			discriminator: "type",
+			mapping: {
+				ptyIn: PtyInTerminalClientToServerEventSchema,
+				startPreview: StartPreviewTerminalClientToServerEventSchema,
+			},
+		}),
+		[PtyInTerminalClientToServerEventSchema, StartPreviewTerminalClientToServerEventSchema],
 	)
 
 	const serializeTerminalClientToServerEvent = useMemo(() => ajvJtd.compileSerializer(TerminalClientToServerEventSchema), [TerminalClientToServerEventSchema, ajvJtd])
@@ -106,6 +135,11 @@ const Terminal = (props: TerminalPropsType): JSX.Element => {
 		shouldReconnect: () => true,
 		reconnectAttempts: 999999,
 		reconnectInterval: 3000,
+		onOpen: () => {
+			setTimeout(() => {
+				sendSocketMessage(serializeTerminalClientToServerEvent({ type: "startPreview", shouldStartPreview: true }))
+			}, 1000)
+		},
 		onMessage: message => {
 			const parsedMessage = parseTerminalServerToClientEvent(message.data as string)
 			if (parsedMessage) {
@@ -128,7 +162,7 @@ const Terminal = (props: TerminalPropsType): JSX.Element => {
 
 	useEffect(() => {
 		xterm.onData(data => {
-			sendSocketMessage(serializeTerminalClientToServerEvent({ ptyIn: data }))
+			sendSocketMessage(serializeTerminalClientToServerEvent({ type: "ptyIn", ptyIn: data }))
 		})
 	}, [sendSocketMessage, serializeTerminalClientToServerEvent, xterm])
 
