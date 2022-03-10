@@ -425,6 +425,16 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 		name: string
 	} | null>(null)
 
+	const [isCreateFileModalOpen, setIsCreateFileModalOpen] = useState(false)
+	const [createNewFileDetails, setCreateNewFileDetails] = useState<{
+		type: "directory" | "file"
+		path: string
+		name: string
+	} | null>(null)
+
+	const [isRenameFileModalOpen, setIsRenameFileModalOpen] = useState(false)
+	const [renameFileModalNewFileName, setRenameFileModalNewFileName] = useState("")
+
 	const [isDeleteFileModalOpen, setIsDeleteFileModalOpen] = useState(false)
 
 	const DirectoryTreeRenderer = ({
@@ -449,6 +459,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								<Fragment key={item.path}>
 									<div
 										className={`py-1 flex flex-row items-center cursor-pointer hover:bg-[#2a2d2e]`}
+										title={item.path}
 										style={{ paddingLeft: depth * 10 }}
 										onClick={() => {
 											sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFolder", folderPath: item.path }))
@@ -483,6 +494,16 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 										}}
 									>
 										<div className="flex min-w-fit">
+											{item.isOpen ? (
+												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+													<path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+												</svg>
+											) : (
+												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+													<path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+												</svg>
+											)}
+
 											<svg xmlns="http://www.w3.org/2000/svg" className="w-[18px] h-[18px] mr-1.5 fill-warning" viewBox="0 0 24 24">
 												<path d="M10 4H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8c0-1.11-.9-2-2-2h-8l-2-2z" />
 											</svg>
@@ -499,6 +520,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								<div
 									key={item.path}
 									className={`py-1 flex flex-row items-center cursor-pointer ${activeTab?.filePath === item.path ? "bg-[#37373d]" : "hover:bg-[#2a2d2e]"}`}
+									title={item.path}
 									style={{ paddingLeft: depth * 10 }}
 									onContextMenu={e => {
 										e.preventDefault()
@@ -572,11 +594,18 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 		<div className="select-none overflow-x-clip">
 			<div className="bg-[#252525] text-xs px-2 pb-2 pt-3 shadow z-50 sticky flex items-center top-0 left-0">
 				<div className="flex-grow font-bold uppercase">Explorer</div>
-				{/* 
-				// TODO Add Create new file and folder functionality
-				*/}
-				{/* <div className="flex items-center justify-center mx-1 cursor-pointer">
-					<button className="text-base">
+				<div className="flex items-center justify-center mx-1 cursor-pointer">
+					<button
+						className="text-base"
+						onClick={() => {
+							setCreateNewFileDetails({
+								type: "file",
+								path: "/home/rdamn/code/foo",
+								name: "foo",
+							})
+							setIsCreateFileModalOpen(true)
+						}}
+					>
 						<svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
 							<path
 								fillRule="evenodd"
@@ -585,7 +614,17 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 							></path>
 						</svg>
 					</button>
-					<button className="ml-3 text-base">
+					<button
+						className="ml-3 text-base"
+						onClick={() => {
+							setCreateNewFileDetails({
+								type: "directory",
+								path: "/home/rdamn/code/baz",
+								name: "baz",
+							})
+							setIsCreateFileModalOpen(true)
+						}}
+					>
 						<svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
 							<path
 								fillRule="evenodd"
@@ -594,12 +633,74 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 							></path>
 						</svg>
 					</button>
-				</div> */}
+				</div>
 			</div>
 
 			<div className="text-sm">{!!directoryTree.home.content.rdamn.content.code.content && <DirectoryTreeRenderer depth={1} directory={directoryTree.home.content.rdamn.content.code} />}</div>
 
 			<ControlledMenu {...contextMenuProps} anchorPoint={contextMenuAnchorPoint} onClose={() => toggleContextMenu(false)} theming="dark">
+				{selectedContextMenuFile?.type === "directory" && (
+					<MenuItem
+						onClick={() => {
+							if (selectedContextMenuFile) {
+								setCreateNewFileDetails({
+									type: "file",
+									path: `${selectedContextMenuFile.path}/foo`,
+									name: "foo",
+								})
+							}
+							setIsCreateFileModalOpen(true)
+						}}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 20 20">
+							<path
+								fillRule="evenodd"
+								d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z"
+								clipRule="evenodd"
+							/>
+						</svg>
+						New File
+					</MenuItem>
+				)}
+
+				{selectedContextMenuFile?.type === "directory" && (
+					<MenuItem
+						onClick={() => {
+							if (selectedContextMenuFile) {
+								setCreateNewFileDetails({
+									type: "directory",
+									path: `${selectedContextMenuFile.path}/baz`,
+									name: "baz",
+								})
+							}
+							setIsCreateFileModalOpen(true)
+						}}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 20 20">
+							<path
+								fillRule="evenodd"
+								d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4zm7 5a1 1 0 10-2 0v1H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V9z"
+							/>
+						</svg>
+						New Folder
+					</MenuItem>
+				)}
+
+				<MenuItem
+					onClick={() => {
+						if (selectedContextMenuFile) {
+							setRenameFileModalNewFileName(selectedContextMenuFile.name)
+						}
+						setIsRenameFileModalOpen(true)
+					}}
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 20 20">
+						<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+						<path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
+					</svg>
+					Rename
+				</MenuItem>
+
 				<MenuItem onClick={() => setIsDeleteFileModalOpen(true)}>
 					<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
 						<path
@@ -611,6 +712,171 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 					Delete
 				</MenuItem>
 			</ControlledMenu>
+
+			{isCreateFileModalOpen && createNewFileDetails && createNewFileDetails.path.length > 0 && (
+				<div className="bg-gray-900 h-[560px] relative z-[9999]">
+					<div className="fixed inset-0 z-10 overflow-y-auto">
+						<div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+							<div className="fixed inset-0 z-40 transition-opacity" aria-hidden="true">
+								<div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+							</div>
+							<span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
+							<div
+								className="relative z-50 inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+								role="dialog"
+								aria-modal="true"
+								aria-labelledby="modal-headline"
+							>
+								<div>
+									<div className="flex items-center justify-center w-14 h-14 mx-auto rounded-full">
+										<svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path strokeWidth="2" d="M12,17 L12,19 M12,10 L12,16 M12,3 L2,22 L22,22 L12,3 Z" />
+										</svg>
+									</div>
+									<div className="mt-3 text-center sm:mt-5">
+										<h3 className="text-lg font-medium leading-6 text-gray-100 ">Do you really want to create this {createNewFileDetails.type}?</h3>
+										<div className="mt-2 text-gray-100">
+											<p>The following {createNewFileDetails.type} would be created:</p>
+
+											<input
+												type="text"
+												placeholder="Enter Name"
+												className="bg-gray-900 input input-sm input-bordered input-primary w-full my-1 text-center"
+												value={createNewFileDetails.name}
+												onChange={e => {
+													const name = e.target.value
+													if (!name.includes("/")) {
+														setCreateNewFileDetails({
+															type: createNewFileDetails.type,
+															path: `${createNewFileDetails.path.split("/").slice(0, -1).join("/")}/${name}`,
+															name: name,
+														})
+													}
+												}}
+											/>
+											<p className="text-sm">({createNewFileDetails.path.replace("/home/rdamn/", "~/")})</p>
+										</div>
+									</div>
+								</div>
+								<div className="grid grid-cols-2 gap-4 mt-5 sm:mt-6">
+									<button
+										type="button"
+										onClick={() => setIsCreateFileModalOpen(false)}
+										className="inline-flex justify-center w-full rounded-md border border-[transparent] shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 sm:text-sm"
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										onClick={() => {
+											if (createNewFileDetails.type === "directory") {
+												sendCrudSocketMessage(
+													serializeCrudClientToServerEvent({
+														command: "createFolder",
+														newFolderPath: createNewFileDetails.path,
+													}),
+												)
+											} else if (createNewFileDetails.type === "file") {
+												sendCrudSocketMessage(
+													serializeCrudClientToServerEvent({
+														command: "createFile",
+														newFilePath: createNewFileDetails.path,
+													}),
+												)
+											}
+
+											setIsCreateFileModalOpen(false)
+											setCreateNewFileDetails(null)
+										}}
+										className="inline-flex justify-center w-full rounded-md border border-[transparent] shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:text-sm"
+									>
+										Create
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{isRenameFileModalOpen && selectedContextMenuFile && (
+				<div className="bg-gray-900 h-[560px] relative z-[9999]">
+					<div className="fixed inset-0 z-10 overflow-y-auto">
+						<div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+							<div className="fixed inset-0 z-40 transition-opacity" aria-hidden="true">
+								<div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+							</div>
+							<span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
+							<div
+								className="relative z-50 inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+								role="dialog"
+								aria-modal="true"
+								aria-labelledby="modal-headline"
+							>
+								<div>
+									<div className="flex items-center justify-center w-14 h-14 mx-auto rounded-full">
+										<svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path strokeWidth="2" d="M12,17 L12,19 M12,10 L12,16 M12,3 L2,22 L22,22 L12,3 Z" />
+										</svg>
+									</div>
+									<div className="mt-3 text-center sm:mt-5">
+										<h3 className="text-lg font-medium leading-6 text-gray-100 ">Do you really want to rename this {selectedContextMenuFile.type}?</h3>
+										<div className="mt-2 text-gray-100">
+											<p>The following {selectedContextMenuFile.type} would be renamed:</p>
+
+											<p className="font-bold underline" title={selectedContextMenuFile.path.replace("/home/rdamn/", "~/")}>
+												{selectedContextMenuFile.name}
+											</p>
+
+											<p>to</p>
+
+											<input
+												type="text"
+												placeholder="Enter New Name"
+												className="bg-gray-900 input input-sm input-bordered input-primary w-full my-1 text-center"
+												title={`${selectedContextMenuFile.path.replace("/home/rdamn/", "~/")}/${renameFileModalNewFileName}`}
+												value={renameFileModalNewFileName}
+												onChange={e => {
+													const newFileName = e.target.value
+													if (!newFileName.includes("/")) {
+														setRenameFileModalNewFileName(newFileName)
+													}
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+								<div className="grid grid-cols-2 gap-4 mt-5 sm:mt-6">
+									<button
+										type="button"
+										onClick={() => setIsRenameFileModalOpen(false)}
+										className="inline-flex justify-center w-full rounded-md border border-[transparent] shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 sm:text-sm"
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										onClick={() => {
+											sendCrudSocketMessage(
+												serializeCrudClientToServerEvent({
+													command: "move",
+													oldPath: selectedContextMenuFile.path,
+													newPath: `${selectedContextMenuFile.path.split("/").slice(0, -1).join("/")}/${renameFileModalNewFileName}`,
+												}),
+											)
+											setIsRenameFileModalOpen(false)
+											setSelectedContextMenuFile(null)
+										}}
+										className="inline-flex justify-center w-full rounded-md border border-[transparent] shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:text-sm"
+									>
+										Rename
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 
 			{isDeleteFileModalOpen && selectedContextMenuFile && (
 				<div className="bg-gray-900 h-[560px] relative z-[9999]">
@@ -634,12 +900,11 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 									</div>
 									<div className="mt-3 text-center sm:mt-5">
 										<h3 className="text-lg font-medium leading-6 text-gray-100">Do you really want to delete this {selectedContextMenuFile.type}?</h3>
-										<div className="mt-2">
-											<p className="text-sm text-gray-100">
-												The following {selectedContextMenuFile.type} would be deleted:
-												<br />
-												<b>{selectedContextMenuFile.name}</b>
-												<br />({selectedContextMenuFile.path})
+										<div className="mt-2 text-gray-100">
+											<p>The following {selectedContextMenuFile.type} would be deleted:</p>
+
+											<p className="font-bold underline" title={selectedContextMenuFile.path.replace("/home/rdamn/", "~/")}>
+												{selectedContextMenuFile.name}
 											</p>
 										</div>
 									</div>
