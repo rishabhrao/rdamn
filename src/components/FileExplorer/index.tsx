@@ -5,11 +5,14 @@ import "@szhsin/react-menu/dist/theme-dark.css"
 
 import { ControlledMenu, MenuItem, useMenuState } from "@szhsin/react-menu"
 import AjvJtd, { JTDParser, JTDSchemaType } from "ajv/dist/jtd"
+import Image from "next/image"
 import objectPath from "object-path"
 import * as objectPathImmutable from "object-path-immutable"
 import { Dispatch, Fragment, SetStateAction, useEffect, useMemo, useState } from "react"
 import useWebSocket from "react-use-websocket"
 import { firstBy } from "thenby"
+
+const { getMaterialFileIcon, getMaterialFolderIcon } = await import("file-extension-icon-js")
 
 /**
  * Shape of properties provided to the File Explorer component
@@ -459,8 +462,8 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								<Fragment key={item.path}>
 									<div
 										className={`py-1 flex flex-row items-center cursor-pointer hover:bg-[#2a2d2e]`}
-										title={item.path}
-										style={{ paddingLeft: depth * 10 }}
+										title={item.path.replace("/home/rdamn/", "~/")}
+										style={{ paddingLeft: depth === 1 ? 10 : depth * 25 }}
 										onClick={() => {
 											sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFolder", folderPath: item.path }))
 											const parentFoldersTillRoot = item.path.split("/").splice(1).join(".content.")
@@ -495,18 +498,18 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 									>
 										<div className="flex min-w-fit">
 											{item.isOpen ? (
-												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
 													<path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
 												</svg>
 											) : (
-												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
 													<path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
 												</svg>
 											)}
+										</div>
 
-											<svg xmlns="http://www.w3.org/2000/svg" className="w-[18px] h-[18px] mr-1.5 fill-warning" viewBox="0 0 24 24">
-												<path d="M10 4H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8c0-1.11-.9-2-2-2h-8l-2-2z" />
-											</svg>
+										<div className="flex min-w-fit mr-1.5" onClick={() => sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFile", filePath: item.path }))}>
+											<Image src={getMaterialFolderIcon(item.name)} alt={item.path} width={18} height={18} />
 										</div>
 
 										<p className="flex-grow overflow-hidden select-none text text-ellipsis opacity-80">{item.name}</p>
@@ -520,8 +523,8 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								<div
 									key={item.path}
 									className={`py-1 flex flex-row items-center cursor-pointer ${activeTab?.filePath === item.path ? "bg-[#37373d]" : "hover:bg-[#2a2d2e]"}`}
-									title={item.path}
-									style={{ paddingLeft: depth * 10 }}
+									title={item.path.replace("/home/rdamn/", "~/")}
+									style={{ paddingLeft: depth === 1 ? 10 : depth * 25 }}
 									onContextMenu={e => {
 										e.preventDefault()
 										setSelectedContextMenuFile({
@@ -533,10 +536,8 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 										toggleContextMenu(true)
 									}}
 								>
-									<div className="flex min-w-fit" onClick={() => sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFile", filePath: item.path }))}>
-										<svg xmlns="http://www.w3.org/2000/svg" className="w-[18px] h-[18px] mr-1.5 fill-info" version="1.1" viewBox="0 0 24 24">
-											<path d="m13 9h5.5l-5.5-5.5v5.5m-7-7h8l6 6v12a2 2 0 0 1 -2 2h-12c-1.11 0-2-.9-2-2v-16c0-1.11.89-2 2-2m5 2h-5v16h5 7v-9h-7v-7z" />
-										</svg>
+									<div className="flex min-w-fit mr-1.5" onClick={() => sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFile", filePath: item.path }))}>
+										<Image src={getMaterialFileIcon(item.name)} alt={item.path} width={18} height={18} />
 									</div>
 
 									<p

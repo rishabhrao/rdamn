@@ -24,6 +24,8 @@ import { ReflexContainer, ReflexElement, ReflexSplitter } from "react-reflex"
 import ReconnectingWebSocket from "reconnecting-websocket"
 import useSWR from "swr"
 
+const { getMaterialFileIcon } = await import("file-extension-icon-js")
+
 const Terminal = dynamic(() => import("@components/Terminal"), {
 	ssr: false,
 })
@@ -460,11 +462,10 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 														? `bg-[#1e1e1e] text-white border-[#ff0000]`
 														: `bg-[#2d2d2d] text-[#888] border-transparent hover:bg-[#292929]`
 												}`}
+												title={openFile.filePath.replace("/home/rdamn/", "~/")}
 											>
-												<div className="flex min-w-fit" onClick={() => setActiveTab(openFile)}>
-													<svg xmlns="http://www.w3.org/2000/svg" className="w-[18px] h-[18px] mr-1.5 fill-info" version="1.1" viewBox="0 0 24 24">
-														<path d="m13 9h5.5l-5.5-5.5v5.5m-7-7h8l6 6v12a2 2 0 0 1 -2 2h-12c-1.11 0-2-.9-2-2v-16c0-1.11.89-2 2-2m5 2h-5v16h5 7v-9h-7v-7z" />
-													</svg>
+												<div className="flex min-w-fit mr-1.5" onClick={() => setActiveTab(openFile)}>
+													<Image src={getMaterialFileIcon(openFile.filePath.split("/").splice(-1).join("/"))} alt={openFile.filePath} width={18} height={18} />
 												</div>
 												<p onClick={() => setActiveTab(openFile)}>{openFile.filePath.split("/").splice(-1)}</p>
 												<div
