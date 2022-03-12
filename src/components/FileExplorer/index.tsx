@@ -592,7 +592,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 	})
 
 	return (
-		<div className="select-none overflow-x-clip">
+		<div className="flex flex-col h-full select-none overflow-x-clip">
 			<div className="bg-[#252525] text-xs px-2 pb-2 pt-3 shadow z-50 sticky flex items-center top-0 left-0">
 				<div className="flex-grow font-bold uppercase">Explorer</div>
 				<div className="flex items-center justify-center mx-1 cursor-pointer">
@@ -653,7 +653,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 							setIsCreateFileModalOpen(true)
 						}}
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 20 20">
+						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
 							<path
 								fillRule="evenodd"
 								d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z"
@@ -677,7 +677,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 							setIsCreateFileModalOpen(true)
 						}}
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 20 20">
+						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
 							<path
 								fillRule="evenodd"
 								d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4zm7 5a1 1 0 10-2 0v1H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V9z"
@@ -687,32 +687,50 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 					</MenuItem>
 				)}
 
-				<MenuItem
-					onClick={() => {
-						if (selectedContextMenuFile) {
-							setRenameFileModalNewFileName(selectedContextMenuFile.name)
-						}
-						setIsRenameFileModalOpen(true)
-					}}
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 20 20">
-						<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-						<path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
-					</svg>
-					Rename
-				</MenuItem>
+				{selectedContextMenuFile?.path.startsWith("/home/rdamn/code/") && (
+					<MenuItem
+						onClick={() => {
+							if (selectedContextMenuFile) {
+								setRenameFileModalNewFileName(selectedContextMenuFile.name)
+							}
+							setIsRenameFileModalOpen(true)
+						}}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
+							<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+							<path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
+						</svg>
+						Rename
+					</MenuItem>
+				)}
 
-				<MenuItem onClick={() => setIsDeleteFileModalOpen(true)}>
-					<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
-						<path
-							fillRule="evenodd"
-							d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-							clipRule="evenodd"
-						/>
-					</svg>
-					Delete
-				</MenuItem>
+				{selectedContextMenuFile?.path.startsWith("/home/rdamn/code/") && (
+					<MenuItem onClick={() => setIsDeleteFileModalOpen(true)}>
+						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 fill-current" viewBox="0 0 20 20">
+							<path
+								fillRule="evenodd"
+								d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+								clipRule="evenodd"
+							/>
+						</svg>
+						Delete
+					</MenuItem>
+				)}
 			</ControlledMenu>
+
+			<div
+				className="flex-grow"
+				onContextMenu={e => {
+					e.preventDefault()
+					setSelectedContextMenuFile({
+						type: "directory",
+						path: "/home/rdamn/code",
+						name: "code",
+					})
+					setContextMenuAnchorPoint({ x: e.clientX, y: e.clientY })
+					toggleContextMenu(true)
+				}}
+			></div>
 
 			{isCreateFileModalOpen && createNewFileDetails && createNewFileDetails.path.length > 0 && (
 				<div className="bg-gray-900 h-[560px] relative z-[9999]">
@@ -729,7 +747,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								aria-labelledby="modal-headline"
 							>
 								<div>
-									<div className="flex items-center justify-center w-14 h-14 mx-auto rounded-full">
+									<div className="flex items-center justify-center mx-auto rounded-full w-14 h-14">
 										<svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path strokeWidth="2" d="M12,17 L12,19 M12,10 L12,16 M12,3 L2,22 L22,22 L12,3 Z" />
 										</svg>
@@ -742,7 +760,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 											<input
 												type="text"
 												placeholder="Enter Name"
-												className="bg-gray-900 input input-sm input-bordered input-primary w-full my-1 text-center"
+												className="w-full my-1 text-center bg-gray-900 input input-sm input-bordered input-primary"
 												value={createNewFileDetails.name}
 												onChange={e => {
 													const name = e.target.value
@@ -815,7 +833,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								aria-labelledby="modal-headline"
 							>
 								<div>
-									<div className="flex items-center justify-center w-14 h-14 mx-auto rounded-full">
+									<div className="flex items-center justify-center mx-auto rounded-full w-14 h-14">
 										<svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path strokeWidth="2" d="M12,17 L12,19 M12,10 L12,16 M12,3 L2,22 L22,22 L12,3 Z" />
 										</svg>
@@ -834,7 +852,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 											<input
 												type="text"
 												placeholder="Enter New Name"
-												className="bg-gray-900 input input-sm input-bordered input-primary w-full my-1 text-center"
+												className="w-full my-1 text-center bg-gray-900 input input-sm input-bordered input-primary"
 												title={`${selectedContextMenuFile.path.replace("/home/rdamn/", "~/")}/${renameFileModalNewFileName}`}
 												value={renameFileModalNewFileName}
 												onChange={e => {
@@ -894,7 +912,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 								aria-labelledby="modal-headline"
 							>
 								<div>
-									<div className="flex items-center justify-center w-14 h-14 mx-auto rounded-full">
+									<div className="flex items-center justify-center mx-auto rounded-full w-14 h-14">
 										<svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path strokeWidth="2" d="M12,17 L12,19 M12,10 L12,16 M12,3 L2,22 L22,22 L12,3 Z" />
 										</svg>
