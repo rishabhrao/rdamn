@@ -40,5 +40,17 @@
 		"typeRoots": ["src/types"]
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-	"exclude": ["node_modules", ".next", ".vercel", ".vscode"]
+	"exclude": ["node_modules", ".next", ".vercel", ".vscode"],
+	"typedocOptions": {
+		"name": "rdamn",
+		"readme": "./README.md",
+		"entryPoints": "./src",
+		"entryPointStrategy": "Expand",
+		"exclude": ["./node_modules/**", "./.next/**", "./.vercel/**", "./.vscode/**"],
+		"hideGenerator": true,
+		"theme": "hierarchy",
+		"gitRevision": "main",
+		"githubPages": true,
+		"out": "./rdamn-docs"
+	}
 }

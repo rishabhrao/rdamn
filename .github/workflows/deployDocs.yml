@@ -1,0 +1,37 @@
+# Copyright (c) rishabhrao (https://github.com/rishabhrao)
+
+# Builds Documentation and deploys it on GitHub Pages.
+
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployDocs:
+    name: Generate and Deploy Docs
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository main branch
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Documentation
+        run: npm run buildDocs
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: gh-pages
+          folder: rdamn-docs
+          single-commit: true
