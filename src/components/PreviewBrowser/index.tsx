@@ -20,7 +20,7 @@ export type PreviewBrowserPropsType = {
  * @return {JSX.Element}
  * @example
  * ```tsx
- * <PreviewBrowser defaultUrl="https://rdamn.cloud" />
+ * <PreviewBrowser defaultUrl="https://rdamn.cloud" proxyUrl={`https://rdamn.cloud`} />
  * ```
  */
 const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
@@ -79,7 +79,7 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 			<div className="relative z-10 flex py-1 bg-gray-900 shadow-sm overflow-x-clip">
 				<div className="flex items-center justify-between">
 					{/* 
-					// TODO figure out a way to go back and forward in history of PreviewBrowser
+					// TODO figure out a way to refresh and go back and forward in history of PreviewBrowser
 					*/}
 					{/* <button className="btn btn-ghost btn-sm btn-square" onClick={() => {}}>
 						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 fill-white" viewBox="0 0 20 20">
@@ -89,9 +89,9 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 								clipRule="evenodd"
 							/>
 						</svg>
-					</button>
+					</button> */}
 
-					<button className="btn btn-ghost btn-sm btn-square" onClick={() => {}}>
+					{/* <button className="btn btn-ghost btn-sm btn-square" onClick={() => {}}>
 						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 fill-white" viewBox="0 0 20 20">
 							<path
 								fillRule="evenodd"
@@ -100,6 +100,7 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 							/>
 						</svg>
 					</button> */}
+
 					{/* <button className="btn btn-ghost btn-sm btn-square" onClick={() => {}}>
 						<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 fill-white" viewBox="0 0 20 20">
 							<path
@@ -109,6 +110,7 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 							/>
 						</svg>
 					</button> */}
+
 					<button
 						className="btn btn-ghost btn-sm btn-square"
 						onClick={() => {

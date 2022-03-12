@@ -33,7 +33,7 @@ export type TerminalPropsType = {
  * @return {JSX.Element}
  * @example
  * ```tsx
- * <Terminal url="http://localhost:1234" dimensions={{ height: 100, width: 200 }} />
+ * <Terminal socketUrl="ws://localhost:1234/terminal" dimensions={{ height: 100, width: 200 }} setIsPlaygroundUp={setIsPlaygroundUp} />
  * ```
  */
 const Terminal = (props: TerminalPropsType): JSX.Element => {

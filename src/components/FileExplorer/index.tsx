@@ -90,6 +90,8 @@ export type FileExplorerPropsType = {
  *		setActiveTab={setActiveTab}
  *		editorChangesCallback={editorChangesCallback}
  *		setEditorChangesCallback={setEditorChangesCallback}
+ *  	directoryTree={directoryTree}
+ *  	setDirectoryTree={setDirectoryTree}
  *	/>
  * ```
  */

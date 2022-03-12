@@ -24,7 +24,7 @@ export type MonacoEditorPropsType = {
  * @return {JSX.Element}
  * @example
  * ```tsx
- * <MonacoEditor />
+ * <MonacoEditor path={"/home/rdamn/code/index.ts"} code={"hello"} setCode={newCode => setCode(newCode)} editorOptions={editorOptions} />
  * ```
  */
 const MonacoEditor = (props: MonacoEditorPropsType): JSX.Element => {

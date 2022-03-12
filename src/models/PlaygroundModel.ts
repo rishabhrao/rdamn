@@ -2,6 +2,11 @@
 
 import { Document, Model, Schema, model, models } from "mongoose"
 
+/**
+ * Shape of the Playground Model
+ *
+ * @export
+ */
 export interface PlaygroundType {
 	createdAt: number
 	userId: string
@@ -26,4 +31,9 @@ PlaygroundSchema.set("toJSON", {
 	},
 })
 
+/**
+ * Mongoose Playground Model
+ *
+ * @export
+ */
 export const PlaygroundModel: Model<PlaygroundType> = (models.playground as Model<PlaygroundType>) || model<PlaygroundType>("playground", PlaygroundSchema)
