@@ -68,7 +68,11 @@ const PreviewBrowser = (props: PreviewBrowserPropsType): JSX.Element => {
 	return url === loadingUrl ? (
 		<div className="flex flex-col items-center justify-center w-full h-full text-center text-white bg-gray-900">
 			<div className="w-32 h-32 mb-10 border-b-2 border-white rounded-full animate-spin"></div>
-			<h1 className="text-lg font-semibold">Waiting for live server on {defaultUrl}</h1>
+			<h1 className="text-lg font-semibold">
+				Waiting for live server on
+				<br />
+				{defaultUrl}
+			</h1>
 		</div>
 	) : (
 		<div className="flex flex-col w-full h-full">
