@@ -223,6 +223,8 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 		}
 	}, [PlaygroundUrl])
 
+	const [isPlaygroundUp, setIsPlaygroundUp] = useState(false)
+
 	return (
 		<AuthCheck authUser={authUser} isAuthLoading={isAuthLoading}>
 			<>
@@ -538,8 +540,19 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 											editorOptions={editorOptions}
 										/>
 									) : (
-										<div className="w-full h-full flex justify-center items-center bg-[#131313] text-white">
+										<div className="w-full h-full flex flex-col justify-center items-center bg-[#131313] text-white">
 											<Image src={LogoIcon} alt="rdamn" width={128} height={128} />
+
+											{!isPlaygroundUp && (
+												<div className="mx-5 my-2 text-center">
+													<p>Please wait up to 50 seconds while the playground starts...</p>
+
+													<br />
+
+													<p className="text-sm opacity-60">Playgrounds are running on 0.25 vCPU Fargate instances to save costs.</p>
+													<p className="text-sm opacity-60">This means container starts are a lot slower than running on EC2.</p>
+												</div>
+											)}
 										</div>
 									)}
 								</ReflexElement>
@@ -553,6 +566,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 												process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production" ? "wss" : "ws"
 											}://${PlaygroundUrl}:${CommunicationPort}/terminal`}
 											dimensions={{ height: 0, width: 0 }}
+											setIsPlaygroundUp={setIsPlaygroundUp}
 										/>
 									) : (
 										<Spinner isDark />

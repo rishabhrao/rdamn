@@ -5,7 +5,7 @@ import "node_modules/xterm/css/xterm.css"
 import { EOL } from "os"
 
 import AjvJtd, { JTDSchemaType } from "ajv/dist/jtd"
-import { useEffect, useMemo, useRef } from "react"
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from "react"
 import useWebSocket, { ReadyState } from "react-use-websocket"
 import { Terminal as XTerminal } from "xterm"
 import { FitAddon } from "xterm-addon-fit"
@@ -22,6 +22,7 @@ export type TerminalPropsType = {
 		height: number
 		width: number
 	}
+	setIsPlaygroundUp: Dispatch<SetStateAction<boolean>>
 }
 
 /**
@@ -36,7 +37,7 @@ export type TerminalPropsType = {
  * ```
  */
 const Terminal = (props: TerminalPropsType): JSX.Element => {
-	const { socketUrl, dimensions } = props
+	const { socketUrl, dimensions, setIsPlaygroundUp } = props
 	const { width, height } = dimensions
 
 	// Refer https://gist.github.com/abritinthebay/d80eb99b2726c83feb0d97eab95206c4
@@ -136,6 +137,7 @@ const Terminal = (props: TerminalPropsType): JSX.Element => {
 		reconnectAttempts: 999999,
 		reconnectInterval: 3000,
 		onOpen: () => {
+			setIsPlaygroundUp(true)
 			setTimeout(() => {
 				sendSocketMessage(serializeTerminalClientToServerEvent({ type: "startPreview", shouldStartPreview: true }))
 			}, 1000)
