@@ -453,10 +453,31 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 						<ReflexElement>
 							<ReflexContainer orientation="horizontal">
 								<ReflexElement flex={0.55} className="overflow-hidden scrollbar-hide">
-									<div className="overflow-x-auto overflow-y-hidden flex justify-start basis-[35px] bg-[#161616] text-sm">
+									<div
+										onMouseDown={e => {
+											e.preventDefault()
+										}}
+										className="overflow-x-auto overflow-y-hidden flex justify-start basis-[35px] bg-[#161616] text-sm"
+									>
 										{openFiles.map((openFile, openFileIdx) => (
 											<div
 												key={openFile.filePath}
+												onMouseDown={e => {
+													e.preventDefault()
+
+													// Button 1 is the middle mouse button
+													if (e.button === 1) {
+														const newOpenFiles = openFiles.filter(({ filePath }) => filePath !== openFile.filePath)
+														if (newOpenFiles.length > 0) {
+															if (activeTab?.filePath === openFile.filePath) {
+																setActiveTab(newOpenFiles[(openFileIdx - 1) % newOpenFiles.length])
+															}
+														} else {
+															setActiveTab(null)
+														}
+														setOpenFiles(newOpenFiles)
+													}
+												}}
 												className={`select-none flex justify-center items-center p-2 cursor-pointer h-full border-t-2 border-solid whitespace-nowrap ${
 													activeTab?.filePath === openFile.filePath
 														? `bg-[#1e1e1e] text-white border-[#ff0000]`
