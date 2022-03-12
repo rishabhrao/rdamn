@@ -544,7 +544,14 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 						<ReflexElement flex={0.35} className="flex-grow w-full h-full">
 							{PlaygroundUrl.length > 0 ? (
-								<PreviewBrowser defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}`} proxyUrl={`https://${PlaygroundSlug}.proxy.${PlaygroundDnsServer}/`} />
+								<PreviewBrowser
+									defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}`}
+									proxyUrl={
+										process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+											? `https://${PlaygroundSlug}.proxy.${PlaygroundDnsServer}/`
+											: `http://${PlaygroundUrl}:${PreviewPort}`
+									}
+								/>
 							) : (
 								<div className="w-full h-full flex justify-center items-center bg-[#131313] text-white">
 									<Spinner isDark />
