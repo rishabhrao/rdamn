@@ -11,6 +11,7 @@ import Spinner from "@components/Spinner"
 import { nextPublicBaseUrl } from "@constants/nextPublicBaseUrl"
 import { connectToDatabase } from "@lib/connectToDatabase"
 import { PlaygroundModel, PlaygroundType } from "@models/PlaygroundModel"
+import Logo512 from "@public/logo512.png"
 import LogoIcon from "@public/logoWhite.png"
 import type * as monaco from "monaco-editor/esm/vs/editor/editor.api"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
@@ -541,7 +542,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 										/>
 									) : (
 										<div className="w-full h-full flex flex-col justify-center items-center bg-[#131313] text-white">
-											<Image src={LogoIcon} alt="rdamn" width={128} height={128} />
+											<Image src={Logo512} alt="rdamn" width={128} height={128} />
 
 											{!isPlaygroundUp && (
 												<div className="mx-5 my-2 text-center">
