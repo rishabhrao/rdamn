@@ -3,6 +3,7 @@
 import { getSession } from "@auth0/nextjs-auth0"
 import Ajv, { JSONSchemaType } from "ajv"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { AbortController } from "node-abort-controller"
 
 const ajv = new Ajv()
 
@@ -47,8 +48,15 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 		return
 	}
 
+	const abortController = new AbortController()
+	const timeoutSignal = abortController.signal
+	setTimeout(() => {
+		abortController.abort()
+	}, 9000)
+
 	await fetch(url, {
 		method: "GET",
+		signal: timeoutSignal,
 	})
 		.then(response => {
 			if (response) {
@@ -58,7 +66,7 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 			}
 		})
 		.catch(() => {
-			res.status(500).send({ success: false, message: `Preview is not Up!` })
+			res.status(205).send({ success: false, message: `Preview is not Up!` })
 		})
 }
 

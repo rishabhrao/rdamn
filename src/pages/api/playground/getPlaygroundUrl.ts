@@ -151,7 +151,7 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 				console.error("Error:", error)
 			}
 
-			res.status(400).send({ success: false, message: `Playground has not started yet...` })
+			res.status(205).send({ success: false, message: `Playground has not started yet...` })
 		})
 }
 
