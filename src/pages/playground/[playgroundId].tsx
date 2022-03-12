@@ -5,7 +5,7 @@ import "react-reflex/styles.css"
 import { getSession, useUser } from "@auth0/nextjs-auth0"
 import Alert, { AlertTypes } from "@components/Alert"
 import AuthCheck from "@components/AuthCheck"
-import FileExplorer from "@components/FileExplorer"
+import FileExplorer, { DirectoryTreeType } from "@components/FileExplorer"
 import MonacoEditor from "@components/MonacoEditor"
 import Spinner from "@components/Spinner"
 import { nextPublicBaseUrl } from "@constants/nextPublicBaseUrl"
@@ -226,6 +226,32 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 	const [isPlaygroundUp, setIsPlaygroundUp] = useState(false)
 
+	const [directoryTree, setDirectoryTree] = useState<DirectoryTreeType>({
+		home: {
+			type: "directory",
+			isOpen: true,
+			path: "/home",
+			name: "home",
+			content: {
+				rdamn: {
+					type: "directory",
+					isOpen: true,
+					path: "/home/rdamn",
+					name: "rdamn",
+					content: {
+						code: {
+							type: "directory",
+							isOpen: true,
+							path: "/home/rdamn/code",
+							name: "code",
+							content: {},
+						},
+					},
+				},
+			},
+		},
+	})
+
 	return (
 		<AuthCheck authUser={authUser} isAuthLoading={isAuthLoading}>
 			<>
@@ -380,6 +406,8 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 													setActiveTab={setActiveTab}
 													editorChangesCallback={editorChangesCallback}
 													setEditorChangesCallback={setEditorChangesCallback}
+													directoryTree={directoryTree}
+													setDirectoryTree={setDirectoryTree}
 												/>
 											) : (
 												<Spinner isDark />

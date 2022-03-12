@@ -15,6 +15,21 @@ import { firstBy } from "thenby"
 const { getMaterialFileIcon, getMaterialFolderIcon } = await import("file-extension-icon-js")
 
 /**
+ * Shape of the Directory Tree
+ *
+ * @export
+ */
+export type DirectoryTreeType = {
+	[key: string]: {
+		type: "directory" | "file"
+		isOpen: boolean
+		path: string
+		name: string
+		content: DirectoryTreeType
+	}
+}
+
+/**
  * Shape of properties provided to the File Explorer component
  *
  * @export
@@ -54,6 +69,8 @@ export type FileExplorerPropsType = {
 			fileContent: string
 		} | null>
 	>
+	directoryTree: DirectoryTreeType
+	setDirectoryTree: Dispatch<SetStateAction<DirectoryTreeType>>
 }
 
 /**
@@ -77,7 +94,7 @@ export type FileExplorerPropsType = {
  * ```
  */
 const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
-	const { crudSocketUrl, filewatchSocketUrl, openFiles, setOpenFiles, activeTab, setActiveTab, editorChangesCallback, setEditorChangesCallback } = props
+	const { crudSocketUrl, filewatchSocketUrl, openFiles, setOpenFiles, activeTab, setActiveTab, editorChangesCallback, setEditorChangesCallback, directoryTree, setDirectoryTree } = props
 
 	const ajvJtd = useMemo(() => new AjvJtd(), [])
 
@@ -290,42 +307,6 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 	)
 
 	const parseCrudServerToClientEvent: JTDParser<CrudServerToClientEventType> = useMemo(() => ajvJtd.compileParser(CrudServerToClientEventSchema), [CrudServerToClientEventSchema, ajvJtd])
-
-	type DirectoryTreeType = {
-		[key: string]: {
-			type: "directory" | "file"
-			isOpen: boolean
-			path: string
-			name: string
-			content: DirectoryTreeType
-		}
-	}
-
-	const [directoryTree, setDirectoryTree] = useState<DirectoryTreeType>({
-		home: {
-			type: "directory",
-			isOpen: true,
-			path: "/home",
-			name: "home",
-			content: {
-				rdamn: {
-					type: "directory",
-					isOpen: true,
-					path: "/home/rdamn",
-					name: "rdamn",
-					content: {
-						code: {
-							type: "directory",
-							isOpen: true,
-							path: "/home/rdamn/code",
-							name: "code",
-							content: {},
-						},
-					},
-				},
-			},
-		},
-	})
 
 	const { sendMessage: sendCrudSocketMessage } = useWebSocket(crudSocketUrl, {
 		retryOnError: true,
