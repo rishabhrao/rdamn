@@ -31,6 +31,7 @@ type ResponseType = {
 	PlaygroundUrl?: string
 	PlaygroundSlug?: string
 	PlaygroundDnsServer?: string
+	PlaygroundProxyServer?: string
 }
 
 const handler = async function (req: NextApiRequest, res: NextApiResponse<ResponseType>) {
@@ -124,6 +125,7 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 			PlaygroundUrl: `${PlaygroundSlug}.${process.env.DNS_SERVER}`,
 			PlaygroundSlug: PlaygroundSlug,
 			PlaygroundDnsServer: process.env.DNS_SERVER,
+			PlaygroundProxyServer: process.env.PROXY_SERVER,
 		}
 	}
 
@@ -133,14 +135,15 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Respon
 				PlaygroundUrl: "localhost",
 				PlaygroundSlug: "test",
 				PlaygroundDnsServer: "localhost",
+				PlaygroundProxyServer: "localhost",
 			})
 		}
 
 		return getPlaygroundUrl()
 	})()
-		.then(({ PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer }) => {
+		.then(({ PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer, PlaygroundProxyServer }) => {
 			if (PlaygroundUrl && PlaygroundSlug && PlaygroundDnsServer) {
-				res.status(201).send({ success: true, message: "Playground Started Successfully!", PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer })
+				res.status(201).send({ success: true, message: "Playground Started Successfully!", PlaygroundUrl, PlaygroundSlug, PlaygroundDnsServer, PlaygroundProxyServer })
 			} else {
 				throw ""
 			}

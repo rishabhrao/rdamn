@@ -108,6 +108,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 	const [PlaygroundUrl, setPlaygroundUrl] = useState<string>("")
 	const [PlaygroundSlug, setPlaygroundSlug] = useState<string>("")
 	const [PlaygroundDnsServer, setPlaygroundDnsServer] = useState<string>("")
+	const [PlaygroundProxyServer, setPlaygroundProxyServer] = useState<string>("")
 
 	const playgroundStarter = async (url: string) => {
 		return fetch(`${nextPublicBaseUrl}/${url}`, {
@@ -169,6 +170,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 					PlaygroundUrl?: string
 					PlaygroundSlug?: string
 					PlaygroundDnsServer?: string
+					PlaygroundProxyServer?: string
 				}
 
 				return (await r.json()) as serverResponseType
@@ -181,11 +183,14 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 					res.PlaygroundSlug &&
 					res.PlaygroundSlug.length > 0 &&
 					res.PlaygroundDnsServer &&
-					res.PlaygroundDnsServer.length > 0
+					res.PlaygroundDnsServer.length > 0 &&
+					res.PlaygroundProxyServer &&
+					res.PlaygroundProxyServer.length > 0
 				) {
 					setPlaygroundUrl(res.PlaygroundUrl)
 					setPlaygroundSlug(res.PlaygroundSlug)
 					setPlaygroundDnsServer(res.PlaygroundDnsServer)
+					setPlaygroundProxyServer(res.PlaygroundProxyServer)
 				} else {
 					throw res.message
 				}
@@ -353,7 +358,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 															</code>{" "}
 															maps to <br />
 															<code>
-																<span className="underline">https</span>://{PlaygroundSlug}.proxy.{PlaygroundDnsServer}
+																<span className="underline">https</span>://{PlaygroundSlug}.{PlaygroundProxyServer}
 															</code>
 														</p>
 														<p className="mt-4 break-all">
@@ -612,7 +617,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 									defaultUrl={`http://${PlaygroundUrl}:${PreviewPort}`}
 									proxyUrl={
 										process.env.VERCEL_ENV === "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-											? `https://${PlaygroundSlug}.proxy.${PlaygroundDnsServer}/`
+											? `https://${PlaygroundSlug}.${PlaygroundProxyServer}/`
 											: `http://${PlaygroundUrl}:${PreviewPort}`
 									}
 								/>
