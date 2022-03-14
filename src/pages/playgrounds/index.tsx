@@ -103,7 +103,7 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 					<meta property="og:title" content="Playgrounds - rdamn" key="title" />
 				</Head>
 
-				<div className="w-full flex">
+				<div className="flex w-full">
 					<div className="m-2 shadow-lg bg-primary navbar text-neutral-content rounded-box">
 						<div className="flex-none">
 							<Link href="/">
@@ -194,8 +194,11 @@ const Playgrounds = ({ playgrounds: ssrPlaygrounds }: InferGetServerSidePropsTyp
 									)}
 								</div>
 
-								<div className="flex flex-col flex-grow">
-									<p className="mb-2 text-xl font-bold">{playground.playgroundName}</p>
+								<div className="flex items-center flex-grow">
+									<p className="text-xl font-bold">{playground.playgroundName}</p>
+								</div>
+
+								<div className="flex items-center">
 									<p className="text-sm text-gray-600">
 										Created on {new Date(playground.createdAt).toLocaleTimeString([], { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric" })}
 									</p>
