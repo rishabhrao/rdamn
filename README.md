@@ -18,7 +18,13 @@
   - [How Playgrounds Work](#how-playgrounds-work)
   - [Tech Stack](#tech-stack)
   - [Project Structure](#project-structure)
+  - [Directory Structures](#directory-structures)
   - [Getting Started](#getting-started)
+    - [Install Node.js and clone all repositories](#install-nodejs-and-clone-all-repositories)
+    - [Install Dependencies for all repos](#install-dependencies-for-all-repos)
+    - [Start the Playground in Local Machine in Development mode](#start-the-playground-in-local-machine-in-development-mode)
+    - [Start the Playground in a Local Docker Container in Development mode](#start-the-playground-in-a-local-docker-container-in-development-mode)
+    - [Run the Next.js Development Server](#run-the-nextjs-development-server)
   - [Documentation](#documentation)
 
 ---
@@ -68,16 +74,106 @@ The Project is divided into three main repositories:
 
 - [rdamn-playground](https://github.com/rishabhrao/rdamn-playground): The Docker container for Playground that runs on AWS Fargate with Amazon ECS.
 
-There are also a few additional repositories for Playground Starter Templates. These are in the format `rdamn-template-*`. Current Templates:
+There are also a few additional repositories for Playground Starter Templates.\
+These are in the format `rdamn-template-*`
 
-- [HTML](https://github.com/rishabhrao/rdamn-template-html) - A Basic HTML, CSS and JS Starter Template.
-- [Next.js](https://github.com/rishabhrao/rdamn-template-nextjs) - A Next.js Starter Template with Yarn as Package Manager.
+Current Templates:
+
+- [rdamn-template-html](https://github.com/rishabhrao/rdamn-template-html) - A Basic HTML, CSS and JS Starter Template.
+- [rdamn-template-nextjs](https://github.com/rishabhrao/rdamn-template-nextjs) - A Next.js Starter Template with Yarn as Package Manager.
+
+---
+
+## Directory Structures
+
+```plaintext
+rdamn
+├── README.md (This file)
+├── next.config.js (Next.js configuration file)
+├── next-env.d.ts (Next.js types file)
+├── package.json (npm package configuration file)
+├── package-lock.json (npm lockfile)
+├── postcss.config.js (PostCSS configuration file)
+├── tailwind.config.js (Tailwind CSS configuration file)
+├── tsconfig.json (Typescript configuration file)
+├── .env (Untracked, Local Environment variables for storing Secrets)
+├── .env.example (An example file showing which Environment variables are required)
+├── .eslintignore (List of files to be ignored by ESLint)
+├── .eslintrc.json (ESLint configuration file)
+├── .gitattributes (Git pathname attributes)
+├── .gitignore (List of files to be ignored by Git)
+├── .prettierignore (List of files to be ignored by Prettier)
+├── .prettierrc (Prettier configuration file)
+├── .github/workflows/ (Directory with GitHub Actions Workflows)
+├── public/ (Assets and metadata publicly served at root of domain)
+├── src/
+│   ├── components/ (Reusable JSX Components)
+│   ├── constants/ (Global Constants)
+│   ├── lib/ (Reusable Utility Functions)
+│   ├── models/ (Mongoose Models)
+│   ├── styles/ (Global CSS)
+│   ├── types/ (Globally used Type Declarations)
+│   ├── pages/ (Entrypoint of Website, served at domain root)
+│   │   ├── _app.tsx (Common component to initialize pages and inject data)
+│   │   ├── 404.tsx (404 Page to show when requested page is not found)
+│   │   ├── index.tsx (Homepage of the Website)
+│   │   ├── api/ (Next.js API Routes)
+│   │   ├── playgrounds/ (Page with list of Playgrounds to manage them)
+└───└───└── playground/ (The Actual Playground Page)
+```
+
+```plaintext
+rdamn-server
+├── README.md
+├── nodemon.json (Nodemon configuration file)
+├── package.json (npm package configuration file)
+├── package-lock.json (npm lockfile)
+├── tsconfig.json (Typescript configuration file)
+├── .env (Untracked, Local Environment variables for storing Secrets)
+├── .env.example (An example file showing which Environment variables are required)
+├── .eslintignore (List of files to be ignored by ESLint)
+├── .eslintrc.json (ESLint configuration file)
+├── .gitattributes (Git pathname attributes)
+├── .gitignore (List of files to be ignored by Git)
+├── .prettierignore (List of files to be ignored by Prettier)
+├── .prettierrc (Prettier configuration file)
+├── .github/workflows/ (Directory with GitHub Actions Workflows)
+├── src/
+│   ├── constants.ts (Global Constants)
+│   ├── db.ts (Utility Function to connect to DB)
+└───└── index.ts (Entrypoint of the Server, contains the DNS and SSL Reverse Proxy Server Code)
+```
+
+```plaintext
+rdamn-playground
+├── README.md
+├── Dockerfile (All the commands to be run to create the Docker Image)
+├── nodemon.json (Nodemon configuration file)
+├── package.json (npm package configuration file)
+├── package-lock.json (npm lockfile)
+├── tsconfig.json (Typescript configuration file)
+├── .dockerignore (List of files to be ignored by Docker)
+├── .env (Untracked, Local Environment variables for storing Secrets)
+├── .env.example (An example file showing which Environment variables are required)
+├── .eslintignore (List of files to be ignored by ESLint)
+├── .eslintrc.json (ESLint configuration file)
+├── .gitattributes (Git pathname attributes)
+├── .gitignore (List of files to be ignored by Git)
+├── .prettierignore (List of files to be ignored by Prettier)
+├── .prettierrc (Prettier configuration file)
+├── .github/workflows/ (Directory with GitHub Actions Workflows)
+├── src/
+│   ├── constants/ (Global Constants)
+│   ├── handlers/ (Websocket Route Handlers)
+│   ├── s3Helpers (Utility Functions to connect to Save and Restore Files from S3)
+└───└── index.ts (Entrypoint of the container, sets the container up to accept incoming connections and shutdown the container after the user disconnects)
+```
 
 ---
 
 ## Getting Started
 
-First, install [Node.js](https://nodejs.org) and then clone all repositories:
+### Install [Node.js](https://nodejs.org) and clone all repositories
 
 ```bash
 git clone https://github.com/rishabhrao/rdamn
@@ -85,7 +181,7 @@ git clone https://github.com/rishabhrao/rdamn-server
 git clone https://github.com/rishabhrao/rdamn-playground
 ```
 
-Install Dependencies for all repos:
+### Install Dependencies for all repos
 
 ```bash
 cd rdamn
@@ -97,16 +193,18 @@ npm i
 cd ../
 ```
 
-Start the Playground in Local Machine in Development mode:
+### Start the Playground in Local Machine in Development mode
+
+`Note`: You will need to have a user named `rdamn` for this to work.
 
 ```bash
 cd rdamn-playground
 npm run dev
 ```
 
-OR
+`OR`
 
-Start the Playground in a Local Docker Container in Development mode:
+### Start the Playground in a Local Docker Container in Development mode
 
 ```bash
 cd rdamn-playground
@@ -115,7 +213,9 @@ npm run dev:buildDocker
 npm run dev:startDocker
 ```
 
-Then in another terminal run the Next.js Development Server:
+### Run the Next.js Development Server
+
+`Note`: You will need to run the following commands in a new terminal.
 
 ```bash
 cd rdamn
