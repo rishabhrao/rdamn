@@ -25,7 +25,7 @@
 
 ## How Playgrounds Work
 
-![rdamn Architecture](./public/architecture.svg)
+![rdamn Architecture](https://raw.githubusercontent.com/rishabhrao/rdamn/main/public/architecture.svg)
 
 ---
 
