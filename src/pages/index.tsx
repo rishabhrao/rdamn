@@ -16,9 +16,12 @@ const Home: NextPage = () => {
 
 				<meta name="theme-color" content="#000000" />
 
-				<meta property="og:title" content="rdamn" key="title" />
-				<meta property="og:description" content="Online Playground IDEs" key="title" />
+				<meta property="og:title" content="rdamn" />
+				<meta property="og:description" content="Online Playground IDEs" />
 				<meta property="og:image" content="https://rdamn.cloud/OGImage.png" />
+				<meta property="og:image:alt" content="rdamn Landing Page" />
+				<meta property="og:image:width" content="1200" />
+				<meta property="og:image:height" content="630" />
 				<meta property="og:url" content="https://rdamn.cloud" />
 				<meta property="og:type" content="website" />
 			</Head>
