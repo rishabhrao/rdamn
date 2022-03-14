@@ -388,7 +388,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 												<div className="flex items-center justify-center w-full p-2 mt-2">
 													<Link href="/">
-														<a role="link" target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm" title="rdamn Homepage">
+														<a role="link" target="_blank" rel="noreferrer" className="font-semibold text-black btn btn-secondary btn-sm" title="rdamn Homepage">
 															rdamn Playgrounds
 														</a>
 													</Link>
