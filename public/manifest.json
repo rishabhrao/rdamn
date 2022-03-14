@@ -1,7 +1,7 @@
 {
 	"short_name": "rdamn",
 	"name": "rdamn Playgrounds",
-	"description": "Online Playground IDEs like codedamn.com",
+	"description": "Online Playground IDEs",
 	"icons": [
 		{
 			"src": "favicon.ico",

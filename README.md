@@ -115,6 +115,7 @@ rdamn
 │   ├── types/ (Globally used Type Declarations)
 │   ├── pages/ (Entrypoint of Website, served at domain root)
 │   │   ├── _app.tsx (Common component to initialize pages and inject data)
+│   │   ├── _document.tsx (Common serverside component to inject HTML tags to pages)
 │   │   ├── 404.tsx (404 Page to show when requested page is not found)
 │   │   ├── index.tsx (Homepage of the Website)
 │   │   ├── api/ (Next.js API Routes)
