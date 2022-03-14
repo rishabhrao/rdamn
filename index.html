@@ -1,0 +1,226 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>rdamn</title><meta name="description" content="Documentation for rdamn"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script><link rel="stylesheet" href="assets/custom.css"/></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">rdamn</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1> rdamn</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#rdamn---online-playground-ides" id="rdamn---online-playground-ides" style="color: inherit; text-decoration: none;">
+  <h1>rdamn - Online Playground IDEs</h1>
+</a>
+<p><a href="https://rdamn.cloud"><img src="https://img.shields.io/website?logo=R&down_color=red&logoColor=white&down_message=down&label=rdamn.cloud&style=for-the-badge&up_color=green&up_message=up&url=https%3A%2F%2Frdamn.cloud" alt="rdamn.cloud"></a>
+<a href="https://github.com/rishabhrao/rdamn/deployments/activity_log?environment=Production"><img src="https://img.shields.io/github/deployments/rishabhrao/rdamn/production?label=Vercel%20Development&logo=vercel&logoColor=white&style=for-the-badge" alt="Vercel Deployment"></a></p>
+<p><a href="https://github.com/rishabhrao/rdamn-server/actions/workflows/check.yml"><img src="https://img.shields.io/github/workflow/status/rishabhrao/rdamn-server/Check?label=rdamn-server%20Checks&logo=amazon&logoColor=white&style=for-the-badge" alt="rdamn-server Checks"></a>
+<a href="https://github.com/rishabhrao/rdamn-playground/actions/workflows/check.yml"><img src="https://img.shields.io/github/workflow/status/rishabhrao/rdamn-playground/Check?label=rdamn-playground%20Checks&logo=amazon&logoColor=white&style=for-the-badge" alt="rdamn-playground Checks"></a></p>
+<p><a href="https://github.com/rishabhrao/rdamn/actions/workflows/deployDocs.yml"><img src="https://img.shields.io/github/workflow/status/rishabhrao/rdamn/Deploy%20Documentation/main?label=Build%20Documentation&logo=github-actions&logoColor=white&style=for-the-badge" alt="Build Documentation"></a>
+<a href="https://github.com/rishabhrao/rdamn/deployments/activity_log?environment=github-pages"><img src="https://img.shields.io/github/deployments/rishabhrao/rdamn/github-pages?label=Deploy%20Documentation&logo=github&logoColor=white&style=for-the-badge" alt="Deploy Documentation"></a></p>
+<hr>
+
+<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+  <h2>Table of Contents</h2>
+</a>
+<ul>
+<li><a href="#rdamn---online-playground-ides">rdamn - Online Playground IDEs</a><ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#how-playgrounds-work">How Playgrounds Work</a></li>
+<li><a href="#tech-stack">Tech Stack</a></li>
+<li><a href="#project-structure">Project Structure</a></li>
+<li><a href="#directory-structures">Directory Structures</a></li>
+<li><a href="#getting-started">Getting Started</a><ul>
+<li><a href="#install-nodejs-and-clone-all-repositories">Install Node.js and clone all repositories</a></li>
+<li><a href="#install-dependencies-for-all-repos">Install Dependencies for all repos</a></li>
+<li><a href="#start-the-playground-in-local-machine-in-development-mode">Start the Playground in Local Machine in Development mode</a></li>
+<li><a href="#start-the-playground-in-a-local-docker-container-in-development-mode">Start the Playground in a Local Docker Container in Development mode</a></li>
+<li><a href="#run-the-nextjs-development-server">Run the Next.js Development Server</a></li>
+</ul>
+</li>
+<li><a href="#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+
+<a href="#how-playgrounds-work" id="how-playgrounds-work" style="color: inherit; text-decoration: none;">
+  <h2>How Playgrounds Work</h2>
+</a>
+<p><img src="https://raw.githubusercontent.com/rishabhrao/rdamn/main/public/architecture.svg" alt="rdamn Architecture"></p>
+<hr>
+
+<a href="#tech-stack" id="tech-stack" style="color: inherit; text-decoration: none;">
+  <h2>Tech Stack</h2>
+</a>
+<ul>
+<li><a href="https://nextjs.org">Next.js</a> is used as the full stack <a href="https://reactjs.org">React</a> framework.<ul>
+<li>The website is hosted on <a href="https://vercel.com">Vercel</a>.</li>
+<li>The Codebase is written completely in <a href="https://www.typescriptlang.org">Typescript</a> running in <code>strict</code> mode. The use of <code>any</code> is disallowed by tsconfig.</li>
+<li><a href="https://microsoft.github.io/monaco-editor">Monaco Editor</a> is used as the Code Editor for the Playgrounds.</li>
+<li><a href="https://xtermjs.org">Xterm.js</a> is used as a terminal to connect to <a href="https://www.npmjs.com/package/node-pty">node-pty</a> running on the Playgrounds.</li>
+<li><a href="https://ajv.js.org">Ajv</a> is used to validate and parse all requests.</li>
+<li><a href="https://auth0.com">Auth0</a> is used for Authentication.</li>
+<li><a href="https://swr.vercel.app">SWR</a> is used for client-side data caching.</li>
+<li><a href="https://tailwindcss.com">Tailwind CSS</a> is used for styling.</li>
+<li><a href="https://daisyui.com">DaisyUI</a> is used as the primary Component UI library.</li>
+<li><a href="https://prettier.io">Prettier</a> Code Formatter is used to enfore consistent code styling.</li>
+</ul>
+</li>
+<li><a href="https://www.mongodb.com">MongoDB</a> is used as the primary NoSQL Database.<ul>
+<li><a href="https://www.mongodb.com/atlas">MongoDB Atlas</a> instance is used as the primary NoSQL DB.</li>
+<li><a href="https://mongoosejs.com">Mongoose</a> is used to model objects and make queries to MongoDB.</li>
+</ul>
+</li>
+<li><a href="https://redis.io">Redis</a> is used for caching and storing ephemeral data. <a href="https://www.npmjs.com/package/ioredis">ioredis</a> is used as the Redis client to make queries.<ul>
+<li><a href="https://redis.com/redis-enterprise-cloud">Redis Enterprise Cloud (Non Persistant)</a> is used as the primary Redis instance.</li>
+<li><a href="https://www.npmjs.com/package/ioredis">ioredis</a> is used as the Redis Client.</li>
+</ul>
+</li>
+<li><a href="https://aws.amazon.com/ec2">Amazon EC2</a> is used for the <a href="https://www.npmjs.com/package/denamed">DNS</a> and SSL <a href="https://www.npmjs.com/package/http-reverse-proxy-ts">Reverse Proxy</a> Server for Playgrounds.</li>
+<li><a href="https://aws.amazon.com/ec2">Amazon ECS</a> is used for running Playgrounds in <a href="https://www.docker.com">Docker</a> Containers on ephemeral <a href="https://aws.amazon.com/fargate">AWS Fargate</a> instances.</li>
+<li><a href="https://aws.amazon.com/s3">Amazon S3</a> is used for storing Playground Files and Data across Sessions.</li>
+<li><a href="https://www.cloudflare.com">Cloudflare</a> is used to handle DNS Records for the Main Website and for DDOS Prevention.</li>
+<li><a href="https://letsencrypt.org">Let&#39;s Encrypt</a> is used for generating SSL Certificates for the Servers.</li>
+<li><a href="https://sematext.com">Sematext</a> is used for Error logging.</li>
+<li><a href="https://www.checklyhq.com/">Checkly</a> is used for Uptime Checks.</li>
+</ul>
+<hr>
+
+<a href="#project-structure" id="project-structure" style="color: inherit; text-decoration: none;">
+  <h2>Project Structure</h2>
+</a>
+<p>The Project is divided into three main repositories:</p>
+<ul>
+<li><p><a href="https://github.com/rishabhrao/rdamn">rdamn</a>: The Frontend code running Next.js and deployed on Vercel (<a href="https://rdamn.cloud">rdamn.cloud</a>).</p>
+</li>
+<li><p><a href="https://github.com/rishabhrao/rdamn-server">rdamn-server</a>: The DNS (<a href="http://play.rdamn.cloud">play.rdamn.cloud</a>) and SSL Reverse Proxy Server (<a href="https://proxy.rdamn.cloud">proxy.rdamn.cloud</a>) for connecting to Playgrounds deployed on Amazon EC2.</p>
+</li>
+<li><p><a href="https://github.com/rishabhrao/rdamn-playground">rdamn-playground</a>: The Docker container for Playground that runs on AWS Fargate with Amazon ECS.</p>
+</li>
+</ul>
+<p>There are also a few additional repositories for Playground Starter Templates.<br>These are in the format <code>rdamn-template-*</code></p>
+<p>Current Templates:</p>
+<ul>
+<li><a href="https://github.com/rishabhrao/rdamn-template-html">rdamn-template-html</a> - A Basic HTML, CSS and JS Starter Template.</li>
+<li><a href="https://github.com/rishabhrao/rdamn-template-nextjs">rdamn-template-nextjs</a> - A Next.js Starter Template with Yarn as Package Manager.</li>
+</ul>
+<hr>
+
+<a href="#directory-structures" id="directory-structures" style="color: inherit; text-decoration: none;">
+  <h2>Directory Structures</h2>
+</a>
+<pre><code class="language-plaintext">rdamn
+├── README.md (This file)
+├── next.config.js (Next.js configuration file)
+├── next-env.d.ts (Next.js types file)
+├── package.json (npm package configuration file)
+├── package-lock.json (npm lockfile)
+├── postcss.config.js (PostCSS configuration file)
+├── tailwind.config.js (Tailwind CSS configuration file)
+├── tsconfig.json (Typescript configuration file)
+├── .env (Untracked, Local Environment variables for storing Secrets)
+├── .env.example (An example file showing which Environment variables are required)
+├── .eslintignore (List of files to be ignored by ESLint)
+├── .eslintrc.json (ESLint configuration file)
+├── .gitattributes (Git pathname attributes)
+├── .gitignore (List of files to be ignored by Git)
+├── .prettierignore (List of files to be ignored by Prettier)
+├── .prettierrc (Prettier configuration file)
+├── .github/workflows/ (Directory with GitHub Actions Workflows)
+├── public/ (Assets and metadata publicly served at root of domain)
+├── src/
+│   ├── components/ (Reusable JSX Components)
+│   ├── constants/ (Global Constants)
+│   ├── lib/ (Reusable Utility Functions)
+│   ├── models/ (Mongoose Models)
+│   ├── styles/ (Global CSS)
+│   ├── types/ (Globally used Type Declarations)
+│   ├── pages/ (Entrypoint of Website, served at domain root)
+│   │   ├── _app.tsx (Common component to initialize pages and inject data)
+│   │   ├── _document.tsx (Common serverside component to inject HTML tags to pages)
+│   │   ├── 404.tsx (404 Page to show when requested page is not found)
+│   │   ├── index.tsx (Homepage of the Website)
+│   │   ├── api/ (Next.js API Routes)
+│   │   ├── playgrounds/ (Page with list of Playgrounds to manage them)
+└───└───└── playground/ (The Actual Playground Page)
+</code></pre>
+<pre><code class="language-plaintext">rdamn-server
+├── README.md
+├── nodemon.json (Nodemon configuration file)
+├── package.json (npm package configuration file)
+├── package-lock.json (npm lockfile)
+├── tsconfig.json (Typescript configuration file)
+├── .env (Untracked, Local Environment variables for storing Secrets)
+├── .env.example (An example file showing which Environment variables are required)
+├── .eslintignore (List of files to be ignored by ESLint)
+├── .eslintrc.json (ESLint configuration file)
+├── .gitattributes (Git pathname attributes)
+├── .gitignore (List of files to be ignored by Git)
+├── .prettierignore (List of files to be ignored by Prettier)
+├── .prettierrc (Prettier configuration file)
+├── .github/workflows/ (Directory with GitHub Actions Workflows)
+├── src/
+│   ├── constants.ts (Global Constants)
+│   ├── db.ts (Utility Function to connect to DB)
+└───└── index.ts (Entrypoint of the Server, contains the DNS and SSL Reverse Proxy Server Code)
+</code></pre>
+<pre><code class="language-plaintext">rdamn-playground
+├── README.md
+├── Dockerfile (All the commands to be run to create the Docker Image)
+├── nodemon.json (Nodemon configuration file)
+├── package.json (npm package configuration file)
+├── package-lock.json (npm lockfile)
+├── tsconfig.json (Typescript configuration file)
+├── .dockerignore (List of files to be ignored by Docker)
+├── .env (Untracked, Local Environment variables for storing Secrets)
+├── .env.example (An example file showing which Environment variables are required)
+├── .eslintignore (List of files to be ignored by ESLint)
+├── .eslintrc.json (ESLint configuration file)
+├── .gitattributes (Git pathname attributes)
+├── .gitignore (List of files to be ignored by Git)
+├── .prettierignore (List of files to be ignored by Prettier)
+├── .prettierrc (Prettier configuration file)
+├── .github/workflows/ (Directory with GitHub Actions Workflows)
+├── src/
+│   ├── constants/ (Global Constants)
+│   ├── handlers/ (Websocket Route Handlers)
+│   ├── s3Helpers (Utility Functions to connect to Save and Restore Files from S3)
+└───└── index.ts (Entrypoint of the container, sets the container up to accept incoming connections and shutdown the container after the user disconnects)
+</code></pre>
+<hr>
+
+<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+  <h2>Getting Started</h2>
+</a>
+
+<a href="#install-nodejs-and-clone-all-repositories" id="install-nodejs-and-clone-all-repositories" style="color: inherit; text-decoration: none;">
+  <h3>Install <a href="https://nodejs.org">Node.js</a> and clone all repositories</h3>
+</a>
+<pre><code class="language-bash"><span class="hl-0">git clone https://github.com/rishabhrao/rdamn</span><br/><span class="hl-0">git clone https://github.com/rishabhrao/rdamn-server</span><br/><span class="hl-0">git clone https://github.com/rishabhrao/rdamn-playground</span>
+</code></pre>
+
+<a href="#install-dependencies-for-all-repos" id="install-dependencies-for-all-repos" style="color: inherit; text-decoration: none;">
+  <h3>Install Dependencies for all repos</h3>
+</a>
+<pre><code class="language-bash"><span class="hl-1">cd</span><span class="hl-0"> rdamn</span><br/><span class="hl-0">npm i</span><br/><span class="hl-1">cd</span><span class="hl-0"> ../rdamn-server</span><br/><span class="hl-0">npm i</span><br/><span class="hl-1">cd</span><span class="hl-0"> ../rdamn-playground</span><br/><span class="hl-0">npm i</span><br/><span class="hl-1">cd</span><span class="hl-0"> ../</span>
+</code></pre>
+
+<a href="#start-the-playground-in-local-machine-in-development-mode" id="start-the-playground-in-local-machine-in-development-mode" style="color: inherit; text-decoration: none;">
+  <h3>Start the Playground in Local Machine in Development mode</h3>
+</a>
+<p><code>Note</code>: You will need to have a user named <code>rdamn</code> for this to work.</p>
+<pre><code class="language-bash"><span class="hl-1">cd</span><span class="hl-0"> rdamn-playground</span><br/><span class="hl-0">npm run dev</span>
+</code></pre>
+<p><code>OR</code></p>
+
+<a href="#start-the-playground-in-a-local-docker-container-in-development-mode" id="start-the-playground-in-a-local-docker-container-in-development-mode" style="color: inherit; text-decoration: none;">
+  <h3>Start the Playground in a Local Docker Container in Development mode</h3>
+</a>
+<pre><code class="language-bash"><span class="hl-1">cd</span><span class="hl-0"> rdamn-playground</span><br/><span class="hl-1">echo</span><span class="hl-0"> NODE_ENV=development &gt;&gt; .env</span><br/><span class="hl-0">npm run dev:buildDocker</span><br/><span class="hl-0">npm run dev:startDocker</span>
+</code></pre>
+
+<a href="#run-the-nextjs-development-server" id="run-the-nextjs-development-server" style="color: inherit; text-decoration: none;">
+  <h3>Run the Next.js Development Server</h3>
+</a>
+<p><code>Note</code>: You will need to run the following commands in a new terminal.</p>
+<pre><code class="language-bash"><span class="hl-1">cd</span><span class="hl-0"> rdamn</span><br/><span class="hl-0">npm run dev</span>
+</code></pre>
+<p>Open <a href="http://localhost:3000">http://localhost:3000</a> in your browser to see the result.</p>
+<hr>
+
+<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+  <h2>Documentation</h2>
+</a>
+<p>See Documentation <a href="https://docs.rdamn.cloud/">Here</a></p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><div class="tree"><ul class="js-category-list category" data-id="root"><li><span class="js-category-title category__title" data-id="root-components"><div class="category__folder js-category-icon" data-id="root-components"></div>components</span><ul class="js-category-list category" data-id="root-components"><li><a class="category__link js-category-link category__link--ts" href="modules/components_Alert.html" data-id="/modules/components_Alert.html">index.tsx</a><ul><li class="tsd-kind-enum tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="enums/components_Alert.AlertTypes.html" data-id="/enums/components_Alert.AlertTypes.html">AlertTypes</a></li><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_Alert.html#AlertPropsType" data-id="/modules/components_Alert.html#AlertPropsType">AlertPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_Alert.html#default" data-id="/modules/components_Alert.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/components_AuthCheck.html" data-id="/modules/components_AuthCheck.html">index.tsx</a><ul><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_AuthCheck.html#AuthCheckPropsType" data-id="/modules/components_AuthCheck.html#AuthCheckPropsType">AuthCheckPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_AuthCheck.html#default" data-id="/modules/components_AuthCheck.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/components_FileExplorer.html" data-id="/modules/components_FileExplorer.html">index.tsx</a><ul><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_FileExplorer.html#DirectoryTreeType" data-id="/modules/components_FileExplorer.html#DirectoryTreeType">DirectoryTreeType</a></li><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_FileExplorer.html#FileExplorerPropsType" data-id="/modules/components_FileExplorer.html#FileExplorerPropsType">FileExplorerPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_FileExplorer.html#default" data-id="/modules/components_FileExplorer.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/components_MonacoEditor.html" data-id="/modules/components_MonacoEditor.html">index.tsx</a><ul><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_MonacoEditor.html#MonacoEditorPropsType" data-id="/modules/components_MonacoEditor.html#MonacoEditorPropsType">MonacoEditorPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_MonacoEditor.html#default" data-id="/modules/components_MonacoEditor.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/components_PreviewBrowser.html" data-id="/modules/components_PreviewBrowser.html">index.tsx</a><ul><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_PreviewBrowser.html#PreviewBrowserPropsType" data-id="/modules/components_PreviewBrowser.html#PreviewBrowserPropsType">PreviewBrowserPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_PreviewBrowser.html#default" data-id="/modules/components_PreviewBrowser.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/components_Spinner.html" data-id="/modules/components_Spinner.html">index.tsx</a><ul><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_Spinner.html#SpinnerPropsType" data-id="/modules/components_Spinner.html#SpinnerPropsType">SpinnerPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_Spinner.html#default" data-id="/modules/components_Spinner.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/components_Terminal.html" data-id="/modules/components_Terminal.html">index.tsx</a><ul><li class="tsd-kind-type-alias tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_Terminal.html#TerminalPropsType" data-id="/modules/components_Terminal.html#TerminalPropsType">TerminalPropsType</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/components_Terminal.html#default" data-id="/modules/components_Terminal.html#default">default</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-constants"><div class="category__folder js-category-icon" data-id="root-constants"></div>constants</span><ul class="js-category-list category" data-id="root-constants"><li><a class="category__link js-category-link category__link--ts" href="modules/constants_nextPublicBaseUrl.html" data-id="/modules/constants_nextPublicBaseUrl.html">nextPublicBaseUrl.ts</a><ul><li class="tsd-kind-variable tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/constants_nextPublicBaseUrl.html#nextPublicBaseUrl" data-id="/modules/constants_nextPublicBaseUrl.html#nextPublicBaseUrl">nextPublicBaseUrl</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-lib"><div class="category__folder js-category-icon" data-id="root-lib"></div>lib</span><ul class="js-category-list category" data-id="root-lib"><li><a class="category__link js-category-link category__link--ts" href="modules/lib_connectToDatabase.html" data-id="/modules/lib_connectToDatabase.html">connectToDatabase.ts</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/lib_connectToDatabase.html#connectToDatabase" data-id="/modules/lib_connectToDatabase.html#connectToDatabase">connectToDatabase</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/lib_redis.html" data-id="/modules/lib_redis.html">redis.ts</a><ul><li class="tsd-kind-variable tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/lib_redis.html#redis" data-id="/modules/lib_redis.html#redis">redis</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-models"><div class="category__folder js-category-icon" data-id="root-models"></div>models</span><ul class="js-category-list category" data-id="root-models"><li><a class="category__link js-category-link category__link--ts" href="modules/models_PlaygroundModel.html" data-id="/modules/models_PlaygroundModel.html">PlaygroundModel.ts</a><ul><li class="tsd-kind-interface tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="interfaces/models_PlaygroundModel.PlaygroundType.html" data-id="/interfaces/models_PlaygroundModel.PlaygroundType.html">PlaygroundType</a></li><li class="tsd-kind-variable tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/models_PlaygroundModel.html#PlaygroundModel" data-id="/modules/models_PlaygroundModel.html#PlaygroundModel">PlaygroundModel</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-pages"><div class="category__folder js-category-icon" data-id="root-pages"></div>pages</span><ul class="js-category-list category" data-id="root-pages"><li><span class="js-category-title category__title" data-id="root-pages-api"><div class="category__folder js-category-icon" data-id="root-pages-api"></div>api</span><ul class="js-category-list category" data-id="root-pages-api"><li><span class="js-category-title category__title" data-id="root-pages-api-auth"><div class="category__folder js-category-icon" data-id="root-pages-api-auth"></div>auth</span><ul class="js-category-list category" data-id="root-pages-api-auth"><li><a class="category__link js-category-link category__link--ts" href="modules/pages_api_auth_____auth0_.html" data-id="/modules/pages_api_auth_____auth0_.html">[...auth0].ts</a><ul><li class="tsd-kind-property tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_api_auth_____auth0_.html#default" data-id="/modules/pages_api_auth_____auth0_.html#default">default</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-pages-api-playground"><div class="category__folder js-category-icon" data-id="root-pages-api-playground"></div>playground</span><ul class="js-category-list category" data-id="root-pages-api-playground"><li><a class="category__link js-category-link category__link--ts" href="modules/pages_api_playground_getPlaygroundUrl.html" data-id="/modules/pages_api_playground_getPlaygroundUrl.html">getPlaygroundUrl.ts</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_api_playground_getPlaygroundUrl.html#default" data-id="/modules/pages_api_playground_getPlaygroundUrl.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages_api_playground_isPreviewUp.html" data-id="/modules/pages_api_playground_isPreviewUp.html">isPreviewUp.ts</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_api_playground_isPreviewUp.html#default" data-id="/modules/pages_api_playground_isPreviewUp.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages_api_playground_start.html" data-id="/modules/pages_api_playground_start.html">start.ts</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_api_playground_start.html#default" data-id="/modules/pages_api_playground_start.html#default">default</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-pages-api-playgrounds"><div class="category__folder js-category-icon" data-id="root-pages-api-playgrounds"></div>playgrounds</span><ul class="js-category-list category" data-id="root-pages-api-playgrounds"><li><a class="category__link js-category-link category__link--ts" href="modules/pages_api_playgrounds_create.html" data-id="/modules/pages_api_playgrounds_create.html">create.ts</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_api_playgrounds_create.html#default" data-id="/modules/pages_api_playgrounds_create.html#default">default</a></li></ul></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-pages-playground"><div class="category__folder js-category-icon" data-id="root-pages-playground"></div>playground</span><ul class="js-category-list category" data-id="root-pages-playground"><li><a class="category__link js-category-link category__link--ts" href="modules/pages_playground__playgroundId_.html" data-id="/modules/pages_playground__playgroundId_.html">[playgroundId].tsx</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_playground__playgroundId_.html#default" data-id="/modules/pages_playground__playgroundId_.html#default">default</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_playground__playgroundId_.html#getServerSideProps" data-id="/modules/pages_playground__playgroundId_.html#getServerSideProps">getServerSideProps</a></li></ul></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages_404.html" data-id="/modules/pages_404.html">404.tsx</a><ul><li class="tsd-kind-variable tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_404.html#default" data-id="/modules/pages_404.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages__app.html" data-id="/modules/pages__app.html">_app.tsx</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages__app.html#default" data-id="/modules/pages__app.html#default">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages__document.html" data-id="/modules/pages__document.html">_document.tsx</a><ul><li class="tsd-kind-class tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="classes/pages__document.default.html" data-id="/classes/pages__document.default.html">default</a></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages_playgrounds.html" data-id="/modules/pages_playgrounds.html">index.tsx</a><ul><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_playgrounds.html#default" data-id="/modules/pages_playgrounds.html#default">default</a></li><li class="tsd-kind-function tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages_playgrounds.html#getServerSideProps" data-id="/modules/pages_playgrounds.html#getServerSideProps">getServerSideProps</a></li></ul></li></ul></li><li><span class="js-category-title category__title" data-id="root-types"><div class="category__folder js-category-icon" data-id="root-types"></div>types</span><ul class="js-category-list category" data-id="root-types"><li><a class="category__link js-category-link category__link--ts" href="modules/types_global.html" data-id="/modules/types_global.html">global.d.ts</a><ul><li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/types_global._daisyui_.html" data-id="/modules/types_global._daisyui_.html">&quot;daisyui&quot;</a></li><li class="tsd-kind-namespace tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/types_global._tailwind_scrollbar_hide_.html" data-id="/modules/types_global._tailwind_scrollbar_hide_.html">&quot;tailwind-scrollbar-hide&quot;</a></li></ul></li></ul></li><li><a class="category__link js-category-link category__link--ts" href="modules/pages.html" data-id="/modules/pages.html">index.tsx</a><ul><li class="tsd-kind-variable tsd-parent-kind-module"><a class="category__link tsd-kind-icon js-category-link" href="modules/pages.html#default" data-id="/modules/pages.html#default">default</a></li></ul></li></ul></div></div></div></div><footer class=""><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li><li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li><li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li><li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="overlay"></div><script src="assets/main.js"></script><script src="assets/custom.js"></script></body></html>
