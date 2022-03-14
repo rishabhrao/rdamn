@@ -18,7 +18,8 @@ const Home: NextPage = () => {
 
 				<meta property="og:title" content="rdamn" />
 				<meta property="og:description" content="Online Playground IDEs" />
-				<meta property="og:image" content="https://rdamn.cloud/OGImage.png" />
+				<meta property="og:image" content="https://ik.imagekit.io/rishabhrao/rdamn/OGImage.png" />
+				<meta property="og:image:type" content="image/png" />
 				<meta property="og:image:alt" content="rdamn Landing Page" />
 				<meta property="og:image:width" content="1200" />
 				<meta property="og:image:height" content="630" />
