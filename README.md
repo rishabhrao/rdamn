@@ -3,8 +3,8 @@
 [![rdamn.cloud](https://img.shields.io/website?logo=R&down_color=red&logoColor=white&down_message=down&label=rdamn.cloud&style=for-the-badge&up_color=green&up_message=up&url=https%3A%2F%2Frdamn.cloud)](https://rdamn.cloud)
 [![Vercel Deployment](https://img.shields.io/github/deployments/rishabhrao/rdamn/production?label=Vercel%20Development&logo=vercel&logoColor=white&style=for-the-badge)](https://github.com/rishabhrao/rdamn/deployments/activity_log?environment=Production)
 
-![rdamn-server Checks](https://img.shields.io/github/workflow/status/rishabhrao/rdamn-server/Check?label=rdamn-server%20Checks&logo=amazon&logoColor=white&style=for-the-badge)
-![rdamn-playground Checks](https://img.shields.io/github/workflow/status/rishabhrao/rdamn-playground/Check?label=rdamn-playground%20Checks&logo=amazon&logoColor=white&style=for-the-badge)
+[![rdamn-server Checks](https://img.shields.io/github/workflow/status/rishabhrao/rdamn-server/Check?label=rdamn-server%20Checks&logo=amazon&logoColor=white&style=for-the-badge)](https://github.com/rishabhrao/rdamn-server/actions/workflows/check.yml)
+[![rdamn-playground Checks](https://img.shields.io/github/workflow/status/rishabhrao/rdamn-playground/Check?label=rdamn-playground%20Checks&logo=amazon&logoColor=white&style=for-the-badge)](https://github.com/rishabhrao/rdamn-playground/actions/workflows/check.yml)
 
 [![Build Documentation](https://img.shields.io/github/workflow/status/rishabhrao/rdamn/Deploy%20Documentation/main?label=Build%20Documentation&logo=github-actions&logoColor=white&style=for-the-badge)](https://github.com/rishabhrao/rdamn/actions/workflows/deployDocs.yml)
 [![Deploy Documentation](https://img.shields.io/github/deployments/rishabhrao/rdamn/github-pages?label=Deploy%20Documentation&logo=github&logoColor=white&style=for-the-badge)](https://github.com/rishabhrao/rdamn/deployments/activity_log?environment=github-pages)
@@ -15,10 +15,17 @@
 
 - [rdamn - Online Playground IDEs](#rdamn---online-playground-ides)
   - [Table of Contents](#table-of-contents)
+  - [How Playgrounds Work](#how-playgrounds-work)
   - [Tech Stack](#tech-stack)
   - [Project Structure](#project-structure)
   - [Getting Started](#getting-started)
   - [Documentation](#documentation)
+
+---
+
+## How Playgrounds Work
+
+![rdamn Architecture](./public/architecture.svg)
 
 ---
 
