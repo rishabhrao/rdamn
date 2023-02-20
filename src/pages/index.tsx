@@ -104,17 +104,17 @@ const Home: NextPage = () => {
 
 								<div className="relative">
 									<div className="sm:text-center">
-										<h2 className="text-3xl font-extrabold tracking-tight text-center text-white sm:text-4xl">rdamn is Open Source!</h2>
+										<h2 className="text-3xl font-extrabold tracking-tight text-center text-white sm:text-4xl">rdamn has been shut down.</h2>
 									</div>
 
 									<div className="mt-12 sm:mx-auto sm:max-w-lg sm:flex">
 										<div className="flex-1 mt-4 sm:mt-0 sm:ml-3">
-											<a href="https://github.com/rishabhrao/rdamn" target="_blank" rel="noreferrer">
+											<a href="https://codedamn.com">
 												<button
 													type="submit"
 													className="block w-full px-5 py-3 text-base font-medium text-white bg-gray-900 border border-transparent rounded-md shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-red-500 sm:px-10"
 												>
-													See How it Works!
+													Use codedamn instead!
 												</button>
 											</a>
 										</div>
@@ -128,7 +128,7 @@ const Home: NextPage = () => {
 				<footer className="mt-24 bg-gray-900 sm:mt-12">
 					<div className="max-w-md px-4 py-5 mx-auto overflow-hidden sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
 						<p className="text-base text-center text-gray-300">
-							&copy; 2022{" "}
+							&copy; 2023{" "}
 							<a href="https://github.com/rishabhrao" target="_blank" rel="noreferrer" className="text-red-500 no-underline hover:text-red-600 link">
 								Rishabh Rao
 							</a>
