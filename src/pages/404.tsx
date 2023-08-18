@@ -1,22 +1,23 @@
+import { Metadata } from "next";
+import { useRouter } from "next/navigation";
 /* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
 
-import type { NextPage } from "next"
-import Head from "next/head"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
+import type { NextPage } from "next";
+import { useEffect } from "react";
+export const metadata: Metadata = {
+    title: `404 - rdamn`,
+};
 
 const Home: NextPage = () => {
-	const router = useRouter()
+    const router = useRouter();
 
-	useEffect(() => {
-		void router.push("/")
-	}, [router])
+    useEffect(() => {
+        void router.push("/");
+    }, [router]);
 
-	return (
-		<Head>
-			<title>404 - rdamn</title>
-		</Head>
-	)
-}
+    return ();
+};
 
-export default Home
+export default Home;
+
+
