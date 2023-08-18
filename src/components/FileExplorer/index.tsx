@@ -5,7 +5,7 @@ import "@szhsin/react-menu/dist/theme-dark.css"
 
 import { ControlledMenu, MenuItem, useMenuState } from "@szhsin/react-menu"
 import AjvJtd, { JTDParser, JTDSchemaType } from "ajv/dist/jtd"
-import Image from "next/image"
+import LegacyImage from "next/legacy/image"
 import objectPath from "object-path"
 import * as objectPathImmutable from "object-path-immutable"
 import { Dispatch, Fragment, SetStateAction, useEffect, useMemo, useState } from "react"
@@ -492,7 +492,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 										</div>
 
 										<div className="flex min-w-fit mr-1.5" onClick={() => sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFile", filePath: item.path }))}>
-											<Image src={getMaterialFolderIcon(item.name)} alt={item.path} width={18} height={18} />
+											<LegacyImage src={getMaterialFolderIcon(item.name)} alt={item.path} width={18} height={18} />
 										</div>
 
 										<p className="flex-grow overflow-hidden select-none text text-ellipsis opacity-80">{item.name}</p>
@@ -520,7 +520,7 @@ const FileExplorer = (props: FileExplorerPropsType): JSX.Element => {
 									}}
 								>
 									<div className="flex min-w-fit mr-1.5" onClick={() => sendCrudSocketMessage(serializeCrudClientToServerEvent({ command: "readFile", filePath: item.path }))}>
-										<Image src={getMaterialFileIcon(item.name)} alt={item.path} width={18} height={18} />
+										<LegacyImage src={getMaterialFileIcon(item.name)} alt={item.path} width={18} height={18} />
 									</div>
 
 									<p

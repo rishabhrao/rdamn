@@ -17,13 +17,16 @@ import type * as monaco from "monaco-editor/esm/vs/editor/editor.api"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import Image from "next/image"
+import LegacyImage from "next/legacy/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import { ReflexContainer, ReflexElement, ReflexSplitter } from "react-reflex"
 import ReconnectingWebSocket from "reconnecting-websocket"
 import useSWR from "swr"
+
+// TODO: implement this function
+async function getPlayground() {}
 
 const { getMaterialFileIcon } = await import("file-extension-icon-js")
 
@@ -258,8 +261,8 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 	})
 
 	return (
-		<AuthCheck authUser={authUser} isAuthLoading={isAuthLoading}>
-			<>
+        (<AuthCheck authUser={authUser} isAuthLoading={isAuthLoading}>
+            <>
 				<Head>
 					<title>{playground.playgroundName} - rdamn Playgrounds</title>
 					<meta property="og:title" content={`${playground.playgroundName} - rdamn Playgrounds`} key="title" />
@@ -290,7 +293,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 										setSideMenuSelectedTab("about")
 									}}
 								>
-									<Image src={LogoIcon} alt="rdamn" width={42} height={42} />
+									<LegacyImage src={LogoIcon} alt="rdamn" width={42} height={42} />
 								</div>
 
 								<div
@@ -387,10 +390,16 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 												</div>
 
 												<div className="flex items-center justify-center w-full p-2 mt-2">
-													<Link href="/">
-														<a role="link" target="_blank" rel="noreferrer" className="font-semibold text-black btn btn-secondary btn-sm" title="rdamn Homepage">
+													<Link
+                                                        href="/"
+                                                        role="link"
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="font-semibold text-black btn btn-secondary btn-sm"
+                                                        title="rdamn Homepage">
+														
 															rdamn Playgrounds
-														</a>
+														
 													</Link>
 												</div>
 											</div>
@@ -522,7 +531,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 												title={openFile.filePath.replace("/home/rdamn/", "~/")}
 											>
 												<div className="flex min-w-fit mr-1.5" onClick={() => setActiveTab(openFile)}>
-													<Image src={getMaterialFileIcon(openFile.filePath.split("/").splice(-1).join("/"))} alt={openFile.filePath} width={18} height={18} />
+													<LegacyImage src={getMaterialFileIcon(openFile.filePath.split("/").splice(-1).join("/"))} alt={openFile.filePath} width={18} height={18} />
 												</div>
 												<p onClick={() => setActiveTab(openFile)}>{openFile.filePath.split("/").splice(-1)}</p>
 												<div
@@ -575,7 +584,7 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 										/>
 									) : (
 										<div className="w-full h-full flex flex-col justify-center items-center bg-[#131313] text-white">
-											<Image src={Logo512} alt="rdamn" width={128} height={128} />
+											<LegacyImage src={Logo512} alt="rdamn" width={128} height={128} />
 
 											{!isPlaygroundUp && (
 												<div className="mx-5 my-2 text-center">
@@ -632,8 +641,8 @@ const Playground = ({ playground }: InferGetServerSidePropsType<typeof getServer
 
 				<Toaster />
 			</>
-		</AuthCheck>
-	)
+        </AuthCheck>)
+    );
 }
 
 export default Playground

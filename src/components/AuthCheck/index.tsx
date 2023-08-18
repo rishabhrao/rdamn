@@ -1,8 +1,9 @@
+
+import { useRouter } from "next/navigation";
 /* Copyright (c) rishabhrao (https://github.com/rishabhrao) */
 
-import { UserProfile } from "@auth0/nextjs-auth0"
-import Spinner from "@components/Spinner"
-import { useRouter } from "next/router"
+import { UserProfile } from "@auth0/nextjs-auth0";
+import Spinner from "@components/Spinner";
 
 /**
  * Shape of properties provided to the AuthCheck component
@@ -10,25 +11,25 @@ import { useRouter } from "next/router"
  * @export
  */
 export type AuthCheckPropsType = {
-	/**
-	 * JSX element to be rendered if AuthCheck passes
-	 *
-	 * @type {JSX.Element}
-	 */
-	children: JSX.Element
-	/**
-	 * Auth0 User object
-	 *
-	 * @type {UserProfile | undefined}
-	 */
-	authUser: UserProfile | undefined
-	/**
-	 * Whether Auth0 is loading
-	 *
-	 * @type {boolean}
-	 */
-	isAuthLoading: boolean
-}
+    /**
+     * JSX element to be rendered if AuthCheck passes
+     *
+     * @type {JSX.Element}
+     */
+    children: JSX.Element;
+    /**
+     * Auth0 User object
+     *
+     * @type {UserProfile | undefined}
+     */
+    authUser: UserProfile | undefined;
+    /**
+     * Whether Auth0 is loading
+     *
+     * @type {boolean}
+     */
+    isAuthLoading: boolean;
+};
 
 /**
  * An Auth Check component to allow only the users who are logged in to access a page or view an element
@@ -44,17 +45,20 @@ export type AuthCheckPropsType = {
  * ```
  */
 const AuthCheck = (props: AuthCheckPropsType): JSX.Element => {
-	const { children, authUser, isAuthLoading } = props
-	const router = useRouter()
+    const { children, authUser, isAuthLoading } = props;
+    const router = useRouter();
 
-	if (isAuthLoading) return <Spinner isFullScreen />
+    if (isAuthLoading)
+        return <Spinner isFullScreen/>;
 
-	if (!authUser) {
-		void router.push("/api/auth/login?returnTo=/playgrounds")
-		return <Spinner isFullScreen />
-	}
+    if (!authUser) {
+        const router = useRouter();
+ void router.push("/api/auth/login?returnTo=/playgrounds");
+        return <Spinner isFullScreen/>;
+    }
 
-	return children
-}
+    return children;
+};
 
-export default AuthCheck
+export default AuthCheck;
+
