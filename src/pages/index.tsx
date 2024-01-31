@@ -128,7 +128,7 @@ const Home: NextPage = () => {
 				<footer className="mt-24 bg-gray-900 sm:mt-12">
 					<div className="max-w-md px-4 py-5 mx-auto overflow-hidden sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
 						<p className="text-base text-center text-gray-300">
-							&copy; 2023{" "}
+							&copy; 2024{" "}
 							<a href="https://github.com/rishabhrao" target="_blank" rel="noreferrer" className="text-red-500 no-underline hover:text-red-600 link">
 								Rishabh Rao
 							</a>
