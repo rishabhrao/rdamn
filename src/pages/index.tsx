@@ -46,13 +46,14 @@ const Home: NextPage = () => {
 
 								<div className="mt-12 sm:max-w-lg sm:w-full sm:flex">
 									<div className="mt-4 sm:mt-0 sm:ml-3">
-										<Link href="/playgrounds">
-											<a className="block w-full px-5 py-3 text-lg font-bold text-center text-black bg-red-500 border border-transparent rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:px-10">
-												Take me to the Playgrounds!
-											</a>
-										</Link>
+										<button
+											disabled
+											className="block w-full px-5 py-3 text-lg font-bold text-center text-black bg-red-500 border border-transparent rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:px-10 disabled:bg-opacity-50 disabled:cursor-not-allowed"
+										>
+											rdamn has been shut down
+										</button>
 
-										<p className="mt-3 text-xs text-center text-gray-300">You will have to login to access the Playgrounds</p>
+										<p className="mt-3 text-xs text-center text-gray-300">I have decided to shut down rdamn after i joined codedamn</p>
 									</div>
 								</div>
 							</div>
@@ -109,12 +110,12 @@ const Home: NextPage = () => {
 
 									<div className="mt-12 sm:mx-auto sm:max-w-lg sm:flex">
 										<div className="flex-1 mt-4 sm:mt-0 sm:ml-3">
-											<a href="https://codedamn.com">
+											<a href="https://bun.new">
 												<button
 													type="submit"
 													className="block w-full px-5 py-3 text-base font-medium text-white bg-gray-900 border border-transparent rounded-md shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-red-500 sm:px-10"
 												>
-													Use codedamn instead!
+													Use codedamn playgrounds instead!
 												</button>
 											</a>
 										</div>
@@ -128,7 +129,7 @@ const Home: NextPage = () => {
 				<footer className="mt-24 bg-gray-900 sm:mt-12">
 					<div className="max-w-md px-4 py-5 mx-auto overflow-hidden sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
 						<p className="text-base text-center text-gray-300">
-							&copy; 2024{" "}
+							&copy; {new Date().getFullYear()}{" "}
 							<a href="https://github.com/rishabhrao" target="_blank" rel="noreferrer" className="text-red-500 no-underline hover:text-red-600 link">
 								Rishabh Rao
 							</a>
